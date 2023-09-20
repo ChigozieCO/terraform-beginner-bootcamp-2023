@@ -14,7 +14,8 @@ As I already have an AWS account created, the first thing I did was create a ter
 - Upon signup, you will be required to enter in the password you just created and verify your account by clicking on the link sent to your mail.
 - After verifying the account I can see that my Terraform cloud account has successfull been created.
 
-![Terraform Cloud]() 2.png
+![Terraform Cloud](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/27a5abcc-1da2-4561-8930-c2cba22f2e8d)
+
 
 # Install Git Graph
 
@@ -22,7 +23,8 @@ After creating the project template on github using [Andrew Brown's template](ht
 
 The extenstion is shown below
 
-![Git Graph]()) 1.png
+![Git Graph](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/5c289513-49af-4411-aca3-0781519cfb5f)
+
 
 # Update Readme
 
@@ -77,7 +79,8 @@ As this is a project I am working with on my own I was still the one that review
 
 Merging this branch with main closed the firat issue I crected.
 
-![Alt text]() 3.png
+![Closed issue](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/fa480fc4-1d61-49fd-9919-5eab25173a8a)
+
 
 # Refactor Terraform CLI 
 
