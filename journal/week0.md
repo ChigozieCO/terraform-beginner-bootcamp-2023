@@ -134,5 +134,29 @@ chmod u+x /bin/install_terraform_cli
 I then updated my `gitpod.yml` file, I took out the first set of terraform installation commands and replaced with this
 
 ```yml
+      source ./bin/install_terraform_cli
+```
+
+# Project Root Env Vars
+
+We decided to update the bash script to set the project root env var and call it in the script and so the following lines of code was added to the `install_terraform_cli` bash script.
+
+```sh
+
+cd /workspace
+
+...
+...
+
+cd PROJECT_ROOT
+```
+
+Then I set the env var and persisted it on gitpod.
+
+```sh
+export PROJECT_ROOT='/workspace/terraform-beginner-bootcamp-2023'
+gp env PROJECT_ROOT='/workspace/terraform-beginner-bootcamp-2023'
+```
+
 
 
