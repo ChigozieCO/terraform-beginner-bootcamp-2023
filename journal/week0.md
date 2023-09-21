@@ -94,3 +94,45 @@ The issue is named `Refactor Terraform CLI`
 
 The new branch is called `3-refactor-terraform-cli` it is on this branch that we would make all our changes.
 
+We ran our existing terraform installation command line by line to figure out the particular line that had the issue and while at it we discovered that the commands being used are depreciated and so we decided to update the commands to the recent one.
+
+As a result of the new set of commands having a lot of lines of code we decided to make it into a script and add a command to run this new script in the `gitpod.yml` file.
+
+### `bin/install_terraform_cli`
+
+```sh
+#!/usr/bin/env bash
+
+sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+
+wget -O- https://apt.releases.hashicorp.com/gpg | \
+gpg --dearmor | \
+sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+
+gpg --no-default-keyring \
+--keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+--fingerprint
+
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
+sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+sudo apt update
+
+sudo apt-get install terraform -y
+
+```
+
+We made use of `#!/usr/bin/env bash` instead of `#!/usr/bin/bash` as the former makes the script more portable with other systems.
+
+For ease of calling the script for execution I need to give the script execution permissions and I do this with the command below
+
+```sh
+chmod u+x /bin/install_terraform_cli
+```
+
+I then updated my `gitpod.yml` file, I took out the first set of terraform installation commands and replaced with this
+
+```yml
+
+
