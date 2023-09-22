@@ -298,7 +298,7 @@ Since we are changing the provider, we would need to run the `terraform init` co
 
 When we run the plan command without first running the init command we get an error message as shown:
 
-image 5
+![Error before init](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/ae171128-8a9c-40a1-bef4-91179c113a62)
 
 So we run `terraform init` first
 
@@ -362,8 +362,9 @@ output "random_bucket_name" {
 }
 ```
 
-image 6
-image 7
+![Created bucket cli](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/968e18de-5323-4330-b030-cab9baa9eb17)
+
+![created bucket console](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/f7658097-0f1d-47b4-8d29-cf9799b24b78)
 
 Then I went ahead to tear down the bucket because I don't need the bucket for anything.
 
@@ -372,3 +373,5 @@ I run destroy command:
 ```sh
 terraform destroy
 ```
+
+![Bucket destroyed cli](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/812aef68-4574-4a79-b464-449e360f2f9e)
