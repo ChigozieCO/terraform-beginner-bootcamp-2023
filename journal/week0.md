@@ -288,3 +288,90 @@ terraform apply --auto-approve
 
 ![Terrafrom Apply](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/9da68000-00eb-4620-9458-43f762944f5a)
 
+# Create an S3 bucket using Terraform
+
+You can only use one provider in your terraform configuration and so to create an S3 bucket in AWS we need to take our the ramdom proovider we initially added and add the [AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest).
+
+You should only have a simple terraform block and a single provider block.
+
+Since we are changing the provider, we would need to run the `terraform init` command again as provider is no longer consistent with what we have previously.
+
+When we run the plan command without first running the init command we get an error message as shown:
+
+![Error before init](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/ae171128-8a9c-40a1-bef4-91179c113a62)
+
+So we run `terraform init` first
+
+### Validate
+
+Another command we can run is the validate command, the terrafrom validate command helps us check whether the configuration we have written is valid. When you run the plan command it validates the configuration first.
+
+The command is:
+
+```sh
+terraform validate
+```
+
+### Destroy
+
+This command is used to destroy your previously-created infrastructure. You need to be really careful with this command as it cannot be undo and it will tear down whatever infrastructure you spun up with this particular terrafrom configuration.
+
+```sh
+terraform destroy
+```
+
+The configuration to create our S3 bucket:
+
+```hcl
+terraform {
+  required_providers {
+    random = {
+      source = "hashicorp/random"
+      version = "3.5.1"
+    }
+    aws = {
+      source = "hashicorp/aws"
+      version = "5.16.2"
+    }
+  }
+}
+
+provider "aws" {
+}
+provider "random" {
+  # Configuration options
+}
+
+# https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string
+resource "random_string" "bucket_name" {
+  lower = true
+  upper = false
+  length   = 32
+  special  = false
+}
+
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket
+resource "aws_s3_bucket" "example" {
+  # Bucket Naming Rules
+  #https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html?icmpid=docs_amazons3_console
+  bucket = random_string.bucket_name.result
+}
+
+output "random_bucket_name" {
+  value = random_string.bucket_name.result
+}
+```
+
+![Created bucket cli](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/968e18de-5323-4330-b030-cab9baa9eb17)
+
+![created bucket console](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/f7658097-0f1d-47b4-8d29-cf9799b24b78)
+
+Then I went ahead to tear down the bucket because I don't need the bucket for anything.
+
+I run destroy command:
+
+```sh
+terraform destroy
+```
+
+![Bucket destroyed cli](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/812aef68-4574-4a79-b464-449e360f2f9e)
