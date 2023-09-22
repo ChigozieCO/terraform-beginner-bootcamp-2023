@@ -375,3 +375,70 @@ terraform destroy
 ```
 
 ![Bucket destroyed cli](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/812aef68-4574-4a79-b464-449e360f2f9e)
+
+
+# Saving Terraform State File
+
+We will use terrafrom cloud to save our terrafrom state file.
+
+In the above section I had destroyed the S3 bucket I spun up with terrafrom and so the state file presently doesn't contain any infrastructure and so I would first spin up my infrastructure before the try yo save the state file.
+
+It is necessary to save the state file privately and only accessible to the team members working on the project with you because the state file gives the information about the condition in which your environment is in.
+
+The states what resources you have running with every necessary detail.
+
+When we build our infrastructure, the terrafrom state file is available locally in our working directory and we can migrate it to an S3 bucket or store it in the terraform cloud.
+
+To migrate our state file, we will add the below code:
+
+```hcl
+  #backend "remote" {
+  #  hostname = "app.terraform.io"
+  #  organization = "TheChigozieCO"
+
+  #  workspaces {
+  #    name = "terra-house-1"
+  #  }
+  #}
+  cloud {
+    organization = "TheChigozieCO"
+    workspaces {
+      name = "terra-house-1"
+    }
+  }
+```
+
+I ran `terrafrom init` but I encountered an error becuse I wasn't logged in
+
+![init error](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/5974659c-9244-4c18-b835-fb56d73b4386)
+
+While trying to login on the console I kept encountering issues and so I had to navigate to the [token creation site interface](https://app.terraform.io/app/settings/tokens) to create the token that will be used for the cli login.
+
+I then created and opened the `/home/gitpod/.terraform.d/credentials.tfrc.json` file manually by running the below command.
+
+```sh
+touch /home/gitpod/.terraform.d/credentials.tfrc.json
+open /home/gitpod/.terraform.d/credentials.tfrc.json
+```
+
+Then i entered this code block which will be used to login me into terraform cloud from the cli
+
+```json
+
+{
+  "credentials": {
+    "app.terraform.io": {
+      "token": "YOUR-TERRAFORM-CLOUD-TOKEN"
+    }
+  }
+}
+```
+
+![CLI prompt](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/3113beeb-d7cd-4d81-a153-bcb200bb36c4)
+
+**My state file in Terraform cloud**
+
+![Terraform cloud](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/bd3b3066-3b90-4b3f-ad24-fb8f9460fda8)
+
+
+
