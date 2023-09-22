@@ -215,4 +215,74 @@ gp env AWS_DEFAULT_REGION='<Your Aws default region>'
 
 I then commited my changes, created a pull request, merged the changes into my main branch and tagged it.
 
+# Terraform Prodivers and Modules - Generate a Random Resource
+
+You need to always remember the [Terraform registry](https://registry.terraform.io/) when working with terraform because this is where you will get the documentation for Terrraform.
+
+In the Terraform registry you will get providers and modules and also examples of how to implement whatever infrastructure you would like to spin up.
+
+Providers in terraform is how you directly interact with an API to make it powered by terraform.
+
+A module is collection of terraform files, it is basically a way of creating a template to utilise commonly used actions. It makes things easier and more portable to move terrafoem code around.
+
+The hashicorp [random provider](https://registry.terraform.io/providers/hashicorp/random/latest) allows us to randomly generate out things out. We will use it to learn.
+
+Using the documentation from the random provider we will write out the module necessary to generate out the random bucket name.
+
+```hcl
+terraform {
+  required_providers {
+    random = {
+      source = "hashicorp/random"
+      version = "3.5.1"
+    }
+  }
+}
+
+provider "random" {
+  # Configuration options
+}
+
+resource "random_string" "bucket_name" {
+  length           = 16
+  special          = false
+}
+
+output "random_bucket_name" {
+  value = random_string.bucket_name.result
+}
+```
+### Init
+
+To begin any terraform project, we need to initialize terrafrom in the folder by running the init command:
+
+```sh
+terraform init
+```
+
+### Plan
+
+We run the plan command to show us the changeset. A changeset is a file that shows the changes that will be implemented when the created or updated module, it tells us was what and what will be onces the changes are implemented. It creates a plan to be implemented.
+
+The command:
+
+```sh
+terraform plan
+```
+
+### Apply
+
+The apply command will run the plan to generate out the plan and then execute the plan, basically implement the infrastructure buildup.
+
+Apply is run with the below command:
+
+```sh
+terraform apply
+```
+
+Whenever you run this command terraform will always ask you if you want to carry out thus action, you can either answer yes or no. To avoid this question coming up you can directly include `auto approve` in the command as shown below:
+
+```sh
+terraform apply --auto-approve
+```
 
