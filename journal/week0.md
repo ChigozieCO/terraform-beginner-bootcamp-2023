@@ -158,5 +158,61 @@ export PROJECT_ROOT='/workspace/terraform-beginner-bootcamp-2023'
 gp env PROJECT_ROOT='/workspace/terraform-beginner-bootcamp-2023'
 ```
 
+# Refactor AWS CLI Installation
+
+When I restart a previously stopped gitpod workspace, the AWS CLI has issues installing correctly and so in the solution, just like was done for the terraform installation, I will refactor the AWS CLI installation into a bash script.
+
+The firat thing I did was to create a `install_aws_cli` file in the `bin` directory.
+
+The contents of the script
+
+```sh
+
+#!/usr/bin/env bash
+
+cd /workspace
+
+rm -f '/workspace/awscliv2.zip'
+rm -rf '/workspace/aws'
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+aws sts get-caller-identity
+
+cd $PROJECT_ROOT
+```
+
+Next I took out the installation instructions in the `gitpod.yml` file and replaced with the command below
+
+```yml
+      source ./bin/install_aws_cli
+```
+
+Then I made the file executable using the method already shown above.
+
+# Set AWS env vars
+
+To check if what AWS credentials are set or if they are set correctly in your environment, use the below AWS CLI command:
+
+```sh
+aws sts get-call-identity
+```
+
+To set the AWS credentials and persist on gitpod I do the following
+
+```sh
+
+export AWS_ACCESS_KEY_ID='<your AWS access key id>'
+export AWS_SECRET_ACCESS_KEY='<your AWS secret access key>'
+export AWS_DEFAULT_REGION='<Your Aws default region>'
+
+gp env AWS_ACCESS_KEY_ID='<your AWS access key id>'
+gp env AWS_SECRET_ACCESS_KEY='<your AWS secret access key>'
+gp env AWS_DEFAULT_REGION='<Your Aws default region>'
+```
+
+I then commited my changes, created a pull request, merged the changes into my main branch and tagged it.
 
 
