@@ -410,7 +410,7 @@ To migrate our state file, we will add the below code:
 
 I ran `terrafrom init` but I encountered an error becuse I wasn't logged in
 
-image 9
+![init error](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/5974659c-9244-4c18-b835-fb56d73b4386)
 
 While trying to login on the console I kept encountering issues and so I had to navigate to the [token creation site interface](https://app.terraform.io/app/settings/tokens) to create the token that will be used for the cli login.
 
@@ -434,9 +434,11 @@ Then i entered this code block which will be used to login me into terraform clo
 }
 ```
 
-image 10
+![CLI prompt](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/3113beeb-d7cd-4d81-a153-bcb200bb36c4)
 
 **My state file in Terraform cloud**
 
-image 11
+![Terraform cloud](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/bd3b3066-3b90-4b3f-ad24-fb8f9460fda8)
+
+
 
