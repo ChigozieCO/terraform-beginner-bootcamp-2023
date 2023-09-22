@@ -286,3 +286,5 @@ Whenever you run this command terraform will always ask you if you want to carry
 terraform apply --auto-approve
 ```
 
+![Terrafrom Apply](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/9da68000-00eb-4620-9458-43f762944f5a)
+
