@@ -500,4 +500,32 @@ For better automation I added the script execution command to my `gitypod.yml` f
       source ./bin/generate_tfrc_credentials
 ```
 
+# TF alias for Terrafrom
 
+Setting terraform alias to be tf will help simplify things for us when we are calling our commands, so we will no need explicitly call out `terrafrom` but now we call it `tf` eg `tf apply` instead of `terraform apply`. It helps us shorten our command.
+
+We can do this by setting up an alias in the bash profile.
+
+To open the bash profile for the terminal, I used the below command:
+
+```sh
+open ~/.bash_profile
+```
+
+This is where we can set bash configurations, we set our alias by calling alias with the short form as seen:
+
+```sh
+alias tf="terraform"
+```
+
+To now use the command we set as alias we need to run that bash prolie script first so that the change is applied.
+
+```sh
+source ~/.bash_profile
+```
+
+Now I can use tf instead of terraform, unfortunately though, gitpod will not always set this in the bash profile for me whenever I relaunch my cloud development environment and so I have to create a script for this.
+
+I created the [set_tf_alias](../bin/set_tf_alias)
+
+Then I add the execute command to `gitpod.yml`
