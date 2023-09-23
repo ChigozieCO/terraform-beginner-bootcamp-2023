@@ -440,5 +440,64 @@ Then i entered this code block which will be used to login me into terraform clo
 
 ![Terraform cloud](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/bd3b3066-3b90-4b3f-ad24-fb8f9460fda8)
 
+# Generate Terrafrom Login Tokin
+
+In the last (above) section I encountered an error tryinmg to login and I had to manual go to terraform cloud to create a login token and manually create the credential file before I was allowed to login via the cli. 
+
+So here I will be automating that whole process with a `generate_tfrc_credentials` script that will be used to generate the token and login when necessary.
+
+The first thing I did was to create the file with the above name and enter in the content of the script, shown below:
+
+```sh
+#!/usr/bin/env bash
+
+# Define target directory and file
+TARGET_DIR="/home/gitpod/.terraform.d"
+TARGET_FILE="${TARGET_DIR}/credentials.tfrc.json"
+
+# Check if TERRAFORM_CLOUD_TOKEN is set
+if [ -z "$TERRAFORM_CLOUD_TOKEN" ]; then
+    echo "Error: TERRAFORM_CLOUD_TOKEN environment variable is not set."
+    exit 1
+fi
+
+# Check if directory exists, if not, create it
+if [ ! -d "$TARGET_DIR" ]; then
+    mkdir -p "$TARGET_DIR"
+fi
+
+# Generate credentials.tfrc.json with the token
+cat > "$TARGET_FILE" << EOF
+{
+  "credentials": {
+    "app.terraform.io": {
+      "token": "$TERRAFORM_CLOUD_TOKEN"
+    }
+  }
+}
+EOF
+
+echo "${TARGET_FILE} has been generated."
+
+```
+
+I exported my terraform login token into the env var `TERRAFORM_CLOUD_TOKEN` referenced in the script and persisted it on gitpod.
+
+```sh
+export TERRAFORM_CLOUD_TOKEN='<your terrafrom login token>'
+gp env TERRAFORM_CLOUD_TOKEN='<your terrafrom login token>'
+```
+
+Then I gave the file the necessary permission
+
+```sh
+chmod u+x bin/generate_tfrc_credentials
+```
+
+For better automation I added the script execution command to my `gitypod.yml` file, this will ensure that whenever I relaunch my environment the token gets generated.
+
+```yml
+      source ./bin/generate_tfrc_credentials
+```
 
 
