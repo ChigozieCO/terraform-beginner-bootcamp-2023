@@ -3,7 +3,7 @@
 This week started out with the usual live stream that starts up our week.
 
 - [Static Web Page](#static-web-page)
-      - [403 Error](#403-error)
+  - [403 Error](#403-error)
 - [Serve the Static Website on Cloudfront](#serve-the-static-website-on-cloudfront)
     + [Create distribution](#create-distribution)
       - [403 Error](#403-error-1)
