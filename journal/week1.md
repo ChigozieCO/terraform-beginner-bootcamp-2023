@@ -22,7 +22,7 @@ http-server
 
 Then make it public by clicking on the `make public` button that appears.
 
-<<<<<<<<<<<<<<<<<<< image 1 >>>>>>>>>>>>>>>>>>>>>>
+![Live http-server](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/c74bac5b-3eb0-4113-b469-cca5b8d86b77)
 
 Now we will push our index file to our s3 bucket via the aws cli
 
@@ -37,7 +37,7 @@ When I refresh my bucket I can see that my file has been uploaded to the bucket.
 
 However, navigating to the URL of the statuc page I get a 403 error because by default my bucket is not public, this is a security feature if AWS.
 
-<<<<<<<<<<<<<<<<<<< image 2 >>>>>>>>>>>>>>>>>>>>>>
+![403 Error](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/db93b2a7-3c30-4ad8-9060-d2a3c0576fd6)
 
 To allow public access to my bucket, I need to navigate to the permissions tab of the bucket and edit the `block public access` section. I also need to add a bucket policy.
 
@@ -63,13 +63,13 @@ I left all the other options as the default selection.
 
 When I click into the distribution I can see the Distribution domain name and this is the domain name that will be used to access the static website going forward.
 
-<<<<<<<<<<<<<<<<<<< image 3 >>>>>>>>>>>>>>>>>>>>>>
+![First Distribution](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/930c9060-7b0f-44a2-a14b-89142698c23d)
 
 #### 403 Error
 
 So I copy the Distribution domain name and navigate to my browser and paste it in but I still have a 403 error.
 
-<<<<<<<<<<<<<<<<<<< image 4 >>>>>>>>>>>>>>>>>>>>>>
+![403 Error 2](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/3ea966bc-be4e-4b2d-a4cc-7fe1e751b584)
 
 Upon further investigation I can see that the reason why I have this error is because I do not have an `origin access control` and a `bucket policy`. So I have to make those for this bucket.
 
@@ -107,7 +107,7 @@ And applied the remaining settings I used in creating the first distribution.
 
 After creating the new distribution I can see a bucket policy that has been created for me and all I need to do is to attach the policy to the bucket so that my website will be accessible now.
 
-<<<<<<<<<<<<<<<<<<< image 5 >>>>>>>>>>>>>>>>>>>>>>
+![2nd Distribution](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/363d853a-2b8d-4965-b98b-59f885db3302)
 
 - Either follow the provided link, as seen in the screenshot above or navigate to the bucket, click into it and click on the permissions tab.
 
@@ -121,4 +121,4 @@ After creating the new distribution I can see a bucket policy that has been crea
 
 Now I when I enter the distribtions domain name in my browser I can see m website being served by cloudfront.
 
-<<<<<<<<<<<<<<<<<<< image 6 >>>>>>>>>>>>>>>>>>>>>>
+![Static web page](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/cb25c20e-f15e-4ba5-a90c-4e3dd2175e5e)
