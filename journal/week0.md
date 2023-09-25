@@ -4,6 +4,26 @@ It's time to get this show on the road :dancers: :dancers:
 
 This is the beginning of the Terraform project bootcamp and so we need to carry out some housekeeping to setup everything we need for the bootcamp.
 
+- [Register Terraform Cloud](#register-terraform-cloud)
+- [Install Git Graph](#install-git-graph)
+- [Update Readme](#update-readme)
+- [Tagging and Merging](#tagging-and-merging)
+- [Refactor Terraform CLI](#refactor-terraform-cli)
+    + [`bin/install_terraform_cli`](#bininstall_terraform_cli)
+- [Project Root Env Vars](#project-root-env-vars)
+- [Refactor AWS CLI Installation](#refactor-aws-cli-installation)
+- [Set AWS env vars](#set-aws-env-vars)
+- [Terraform Prodivers and Modules - Generate a Random Resource](#terraform-providers-and-modules---generate-a-random-resource)
+    + [Init](#init)
+    + [Plan](#plan)
+    + [Apply](#apply)
+- [Create an S3 bucket using Terraform](#create-an-s3-bucket-using-terraform)
+    + [Validate](#validate)
+    + [Destroy](#destroy)
+- [Saving Terraform State File](#saving-terraform-state-file)
+- [Generate Terraform Login Tokin](#generate-terraform-login-tokin)
+- [TF alias for Terraform](#tf-alias-for-terraform)
+
 # Register Terraform Cloud
 
 As I already have an AWS account created, the first thing I did was create a terraform cloud account with the following steps.
@@ -12,16 +32,16 @@ As I already have an AWS account created, the first thing I did was create a ter
 - Click on the Try Terraform Cloud located at the top right side of the site
 - Enter my details as required and signup.
 - Upon signup, you will be required to enter in the password you just created and verify your account by clicking on the link sent to your mail.
-- After verifying the account I can see that my Terraform cloud account has successfull been created.
+- After verifying the account I can see that my Terraform cloud account has successfully been created.
 
 ![Terraform Cloud](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/27a5abcc-1da2-4561-8930-c2cba22f2e8d)
 
 
 # Install Git Graph
 
-After creating the project template on github using [Andrew Brown's template](https://github.com/ExamProCo/terraform-beginner-bootcamp-2023) we went ahead to install Git Grap, a Vs Code extention that will help us visualise changes we make to our code.
+After creating the project template on github using [Andrew Brown's template](https://github.com/ExamProCo/terraform-beginner-bootcamp-2023) we went ahead to install Git Graph, a Vs Code extension that will help us visualise changes we make to our code.
 
-The extenstion is shown below
+The extension is shown below
 
 ![Git Graph](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/5c289513-49af-4411-aca3-0781519cfb5f)
 
@@ -59,7 +79,7 @@ The general format:
 
 # Tagging and Merging
 
-After making my changes I commited them, tagged and pushed to the branch and then I created a pull request.
+After making my changes I committed them, tagged and pushed to the branch and then I created a pull request.
 
 The command to create the tag is shown below:
 
@@ -67,9 +87,9 @@ The command to create the tag is shown below:
 git tag 0.1.0
 ```
 
-I also created tag `0.1.1` to correct my inital branching mistake.
+I also created tag `0.1.1` to correct my initial branching mistake.
 
-The tag was pushed usinmg this command 
+The tag was pushed using this command 
 
 ```sh
 git push --tag
@@ -77,7 +97,7 @@ git push --tag
 
 As this is a project I am working with on my own I was still the one that reviewed and merged the pull request I created.
 
-Merging this branch with main closed the firat issue I crected.
+Merging this branch with main closed the first issue I created.
 
 ![Closed issue](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/fa480fc4-1d61-49fd-9919-5eab25173a8a)
 
@@ -86,7 +106,7 @@ Merging this branch with main closed the firat issue I crected.
 
 The next thing we did was to correct the Terraform CLI installation instruction added by the bootcamp instructor.
 
-We noticed that the Terraform CLI installion was not fully automated and required user input to complete the installation, this is not ideal and so we need to fix this.
+We noticed that the Terraform CLI installation was not fully automated and required user input to complete the installation, this is not ideal and so we need to fix this.
 
 The first thing I did was to create an issue and create a new branch to this effect.
 
@@ -213,17 +233,17 @@ gp env AWS_SECRET_ACCESS_KEY='<your AWS secret access key>'
 gp env AWS_DEFAULT_REGION='<Your Aws default region>'
 ```
 
-I then commited my changes, created a pull request, merged the changes into my main branch and tagged it.
+I then committed my changes, created a pull request, merged the changes into my main branch and tagged it.
 
-# Terraform Prodivers and Modules - Generate a Random Resource
+# Terraform Providers and Modules - Generate a Random Resource
 
-You need to always remember the [Terraform registry](https://registry.terraform.io/) when working with terraform because this is where you will get the documentation for Terrraform.
+You need to always remember the [Terraform registry](https://registry.terraform.io/) when working with terraform because this is where you will get the documentation for Terraform.
 
 In the Terraform registry you will get providers and modules and also examples of how to implement whatever infrastructure you would like to spin up.
 
 Providers in terraform is how you directly interact with an API to make it powered by terraform.
 
-A module is collection of terraform files, it is basically a way of creating a template to utilise commonly used actions. It makes things easier and more portable to move terrafoem code around.
+A module is collection of terraform files, it is basically a way of creating a template to utilise commonly used actions. It makes things easier and more portable to move terraform code around.
 
 The hashicorp [random provider](https://registry.terraform.io/providers/hashicorp/random/latest) allows us to randomly generate out things out. We will use it to learn.
 
@@ -254,7 +274,7 @@ output "random_bucket_name" {
 ```
 ### Init
 
-To begin any terraform project, we need to initialize terrafrom in the folder by running the init command:
+To begin any terraform project, we need to initialize terraform in the folder by running the init command:
 
 ```sh
 terraform init
@@ -262,7 +282,7 @@ terraform init
 
 ### Plan
 
-We run the plan command to show us the changeset. A changeset is a file that shows the changes that will be implemented when the created or updated module, it tells us was what and what will be onces the changes are implemented. It creates a plan to be implemented.
+We run the plan command to show us the changeset. A changeset is a file that shows the changes that will be implemented when the created or updated module, it tells us was what and what will be once the changes are implemented. It creates a plan to be implemented.
 
 The command:
 
@@ -286,11 +306,11 @@ Whenever you run this command terraform will always ask you if you want to carry
 terraform apply --auto-approve
 ```
 
-![Terrafrom Apply](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/9da68000-00eb-4620-9458-43f762944f5a)
+![Terraform Apply](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/9da68000-00eb-4620-9458-43f762944f5a)
 
 # Create an S3 bucket using Terraform
 
-You can only use one provider in your terraform configuration and so to create an S3 bucket in AWS we need to take our the ramdom proovider we initially added and add the [AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest).
+You can only use one provider in your terraform configuration and so to create an S3 bucket in AWS we need to take our the random provider we initially added and add the [AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest).
 
 You should only have a simple terraform block and a single provider block.
 
@@ -304,7 +324,7 @@ So we run `terraform init` first
 
 ### Validate
 
-Another command we can run is the validate command, the terrafrom validate command helps us check whether the configuration we have written is valid. When you run the plan command it validates the configuration first.
+Another command we can run is the validate command, the terraform validate command helps us check whether the configuration we have written is valid. When you run the plan command it validates the configuration first.
 
 The command is:
 
@@ -314,7 +334,7 @@ terraform validate
 
 ### Destroy
 
-This command is used to destroy your previously-created infrastructure. You need to be really careful with this command as it cannot be undo and it will tear down whatever infrastructure you spun up with this particular terrafrom configuration.
+This command is used to destroy your previously-created infrastructure. You need to be really careful with this command as it cannot be undone and it will tear down whatever infrastructure you spun up with this particular terraform configuration.
 
 ```sh
 terraform destroy
@@ -379,15 +399,15 @@ terraform destroy
 
 # Saving Terraform State File
 
-We will use terrafrom cloud to save our terrafrom state file.
+We will use terraform cloud to save our terraform state file.
 
-In the above section I had destroyed the S3 bucket I spun up with terrafrom and so the state file presently doesn't contain any infrastructure and so I would first spin up my infrastructure before the try yo save the state file.
+In the above section I had destroyed the S3 bucket I spun up with terraform and so the state file presently doesn't contain any infrastructure and so I would first spin up my infrastructure before the try yo save the state file.
 
 It is necessary to save the state file privately and only accessible to the team members working on the project with you because the state file gives the information about the condition in which your environment is in.
 
 The states what resources you have running with every necessary detail.
 
-When we build our infrastructure, the terrafrom state file is available locally in our working directory and we can migrate it to an S3 bucket or store it in the terraform cloud.
+When we build our infrastructure, the terraform state file is available locally in our working directory and we can migrate it to an S3 bucket or store it in the terraform cloud.
 
 To migrate our state file, we will add the below code:
 
@@ -408,7 +428,7 @@ To migrate our state file, we will add the below code:
   }
 ```
 
-I ran `terrafrom init` but I encountered an error becuse I wasn't logged in
+I ran `terraform init` but I encountered an error because I wasn't logged in
 
 ![init error](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/5974659c-9244-4c18-b835-fb56d73b4386)
 
@@ -421,7 +441,7 @@ touch /home/gitpod/.terraform.d/credentials.tfrc.json
 open /home/gitpod/.terraform.d/credentials.tfrc.json
 ```
 
-Then i entered this code block which will be used to login me into terraform cloud from the cli
+Then I entered this code block which will be used to login me into terraform cloud from the cli
 
 ```json
 
@@ -440,9 +460,9 @@ Then i entered this code block which will be used to login me into terraform clo
 
 ![Terraform cloud](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/bd3b3066-3b90-4b3f-ad24-fb8f9460fda8)
 
-# Generate Terrafrom Login Tokin
+# Generate Terraform Login Tokin
 
-In the last (above) section I encountered an error tryinmg to login and I had to manual go to terraform cloud to create a login token and manually create the credential file before I was allowed to login via the cli. 
+In the last (above) section I encountered an error trying to login and I had to manual go to terraform cloud to create a login token and manually create the credential file before I was allowed to login via the cli. 
 
 So here I will be automating that whole process with a `generate_tfrc_credentials` script that will be used to generate the token and login when necessary.
 
@@ -484,8 +504,8 @@ echo "${TARGET_FILE} has been generated."
 I exported my terraform login token into the env var `TERRAFORM_CLOUD_TOKEN` referenced in the script and persisted it on gitpod.
 
 ```sh
-export TERRAFORM_CLOUD_TOKEN='<your terrafrom login token>'
-gp env TERRAFORM_CLOUD_TOKEN='<your terrafrom login token>'
+export TERRAFORM_CLOUD_TOKEN='<your terraform login token>'
+gp env TERRAFORM_CLOUD_TOKEN='<your terraform login token>'
 ```
 
 Then I gave the file the necessary permission
@@ -494,15 +514,15 @@ Then I gave the file the necessary permission
 chmod u+x bin/generate_tfrc_credentials
 ```
 
-For better automation I added the script execution command to my `gitypod.yml` file, this will ensure that whenever I relaunch my environment the token gets generated.
+For better automation I added the script execution command to my `gitpod.yml` file, this will ensure that whenever I relaunch my environment the token gets generated.
 
 ```yml
       source ./bin/generate_tfrc_credentials
 ```
 
-# TF alias for Terrafrom
+# TF alias for Terraform
 
-Setting terraform alias to be tf will help simplify things for us when we are calling our commands, so we will no need explicitly call out `terrafrom` but now we call it `tf` eg `tf apply` instead of `terraform apply`. It helps us shorten our command.
+Setting terraform alias to be tf will help simplify things for us when we are calling our commands, so we will no need explicitly call out `terraform` but now we call it `tf` eg `tf apply` instead of `terraform apply`. It helps us shorten our command.
 
 We can do this by setting up an alias in the bash profile.
 
