@@ -1,0 +1,124 @@
+# Getting Comfortable with Terraform and Terraform Cloud
+
+This week started out with the usual live stream that starts up our week.
+
+# Static Web Page
+
+We created an S3 bucket that would host our static web page, after creating the AWS S3 bucket I turned on static web hosting with index document located at `index.html` and error document located at `error.html`.
+
+Now we need to create the index page and the error page.
+
+First to be able to serve the page locally, I just enetered a random code into the `html.index` page and in the terminal i ran the below code to be able to serve the page locally:
+
+```sh
+npm install http-server -g
+```
+
+Once that is done, to serve it we need to run the below comman:
+
+```sh
+http-server
+```
+
+Then make it public by clicking on the `make public` button that appears.
+
+<<<<<<<<<<<<<<<<<<< image 1 >>>>>>>>>>>>>>>>>>>>>>
+
+Now we will push our index file to our s3 bucket via the aws cli
+
+```sh
+aws s3 cp public/index.html s3://154f4e38-a1ac-42da-9c20-ad7a5ccfcfe1
+-tfbootcamp/index.html
+```
+
+When I refresh my bucket I can see that my file has been uploaded to the bucket.
+
+#### 403 Error
+
+However, navigating to the URL of the statuc page I get a 403 error because by default my bucket is not public, this is a security feature if AWS.
+
+<<<<<<<<<<<<<<<<<<< image 2 >>>>>>>>>>>>>>>>>>>>>>
+
+To allow public access to my bucket, I need to navigate to the permissions tab of the bucket and edit the `block public access` section. I also need to add a bucket policy.
+
+However, instead of granting public access this way, we will create a cloudfront distribution as I will be everying the bucket through cloudfront a content distribution network.
+
+# Serve the Static Website on Cloudfront
+
+### Create distribution
+
+- I navigate to cloudfront and click on `create new cloudfront distribution`.
+
+- For the origins I will use the S3 bucket's website endpoint (basically the domain name of the website).
+
+I left all the other options as the default selection.
+
+- For Web Application Firewall (WAF) I selected `Do not enable security protections`
+
+- In the `Default root object` segment I enetered `index.html`
+
+- I then added a description as `Terrahouse example cdn`
+
+- Now I went ahead and created the distribution.
+
+When I click into the distribution I can see the Distribution domain name and this is the domain name that will be used to access the static website going forward.
+
+<<<<<<<<<<<<<<<<<<< image 3 >>>>>>>>>>>>>>>>>>>>>>
+
+#### 403 Error
+
+So I copy the Distribution domain name and navigate to my browser and paste it in but I still have a 403 error.
+
+<<<<<<<<<<<<<<<<<<< image 4 >>>>>>>>>>>>>>>>>>>>>>
+
+Upon further investigation I can see that the reason why I have this error is because I do not have an `origin access control` and a `bucket policy`. So I have to make those for this bucket.
+
+### Create Origin Access Control (OAC)
+
+- To do this I navigate to `origin access`.
+
+- On the left pane of cloudfront and click on `create control setting`. 
+
+- I enter the name I'd like to use and leave everything else as default 
+
+- And click create.
+
+### Attach the OAC
+
+- To attach the newly created OAC, I navigate to the distribution.
+
+- Click on the `behaviours` tab.
+
+- Select the available behaviour and click `edit`
+
+I had to pivot at this point because I couldnt find how to attach the OAC so we went the route of disabling the first distribution and creating a new one.
+
+### Create new Distribution.
+
+In the creation of this new distribution I didn't use the website's endpoint, I used the S3 bucket name. This allowed me the option on selecting `Origin access control settings` as my origin access.
+
+We found out that when you use the website endpoint as the origin domain (as was done with the frist distribution I created above) I didn't have the `origin access` section available to me.
+
+- From the dropdown of the `Origin access control settings` I chose the OAC I created above.
+
+And applied the remaining settings I used in creating the first distribution.
+
+### Attach Bucket Policy
+
+After creating the new distribution I can see a bucket policy that has been created for me and all I need to do is to attach the policy to the bucket so that my website will be accessible now.
+
+<<<<<<<<<<<<<<<<<<< image 5 >>>>>>>>>>>>>>>>>>>>>>
+
+- Either follow the provided link, as seen in the screenshot above or navigate to the bucket, click into it and click on the permissions tab.
+
+- Scroll down to the `bucket policy` section and click on edit.
+
+- Once the interface loads, paste the policy you copied from the distribution creation (shown in the screenshot above).
+
+- Click `save changes`.
+
+#### Served page on Cloudfront
+
+Now I when I enter the distribtions domain name in my browser I can see m website being served by cloudfront.
+
+<<<<<<<<<<<<<<<<<<< image 6 >>>>>>>>>>>>>>>>>>>>>>
