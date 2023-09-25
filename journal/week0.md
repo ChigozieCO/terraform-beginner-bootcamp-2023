@@ -9,11 +9,11 @@ This is the beginning of the Terraform project bootcamp and so we need to carry 
 - [Update Readme](#update-readme)
 - [Tagging and Merging](#tagging-and-merging)
 - [Refactor Terraform CLI](#refactor-terraform-cli)
-    + [`bin/install_terraform_cli`](#-bin-install-terraform-cli-)
+    + [`bin/install_terraform_cli`](#bininstall_terraform_cli)
 - [Project Root Env Vars](#project-root-env-vars)
 - [Refactor AWS CLI Installation](#refactor-aws-cli-installation)
 - [Set AWS env vars](#set-aws-env-vars)
-- [Terraform Prodivers and Modules - Generate a Random Resource](#terraform-prodivers-and-modules---generate-a-random-resource)
+- [Terraform Prodivers and Modules - Generate a Random Resource](#terraform-providers-and-modules---generate-a-random-resource)
     + [Init](#init)
     + [Plan](#plan)
     + [Apply](#apply)
@@ -21,8 +21,8 @@ This is the beginning of the Terraform project bootcamp and so we need to carry 
     + [Validate](#validate)
     + [Destroy](#destroy)
 - [Saving Terraform State File](#saving-terraform-state-file)
-- [Generate Terrafrom Login Tokin](#generate-terrafrom-login-tokin)
-- [TF alias for Terrafrom](#tf-alias-for-terrafrom)
+- [Generate Terraform Login Tokin](#generate-terraform-login-tokin)
+- [TF alias for Terraform](#tf-alias-for-terraform)
 
 # Register Terraform Cloud
 
@@ -460,7 +460,7 @@ Then I entered this code block which will be used to login me into terraform clo
 
 ![Terraform cloud](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/bd3b3066-3b90-4b3f-ad24-fb8f9460fda8)
 
-# Generate Terrafrom Login Tokin
+# Generate Terraform Login Tokin
 
 In the last (above) section I encountered an error trying to login and I had to manual go to terraform cloud to create a login token and manually create the credential file before I was allowed to login via the cli. 
 
@@ -520,7 +520,7 @@ For better automation I added the script execution command to my `gitpod.yml` fi
       source ./bin/generate_tfrc_credentials
 ```
 
-# TF alias for Terrafrom
+# TF alias for Terraform
 
 Setting terraform alias to be tf will help simplify things for us when we are calling our commands, so we will no need explicitly call out `terraform` but now we call it `tf` eg `tf apply` instead of `terraform apply`. It helps us shorten our command.
 
