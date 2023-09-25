@@ -7,7 +7,7 @@ This week started out with the usual live stream that starts up our week.
 - [Serve the Static Website on Cloudfront](#serve-the-static-website-on-cloudfront)
     + [Create distribution](#create-distribution)
       - [403 Error](#403-error-1)
-    + [Create Origin Access Control (OAC)](#create-origin-access-control--oac-)
+    + [Create Origin Access Control (OAC)](#create-origin-access-control-oac)
     + [Attach the OAC](#attach-the-oac)
     + [Create new Distribution.](#create-new-distribution)
     + [Attach Bucket Policy](#attach-bucket-policy)
