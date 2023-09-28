@@ -12,6 +12,7 @@ This week started out with the usual live stream that starts up our week.
     + [Create new Distribution.](#create-new-distribution)
     + [Attach Bucket Policy](#attach-bucket-policy)
       - [Served page on Cloudfront](#served-page-on-cloudfront)
+- [Root Module Structure](#root-module-structure)
 
 # Static Web Page
 
@@ -133,3 +134,34 @@ After creating the new distribution I can see a bucket policy that has been crea
 Now I when I enter the distributions domain name in my browser I can see m website being served by cloudfront.
 
 ![Static web page](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/cb25c20e-f15e-4ba5-a90c-4e3dd2175e5e)
+
+# Root Module structure
+
+When creating teeraform modules it is alwatys best to divide your code into different directories that serve different purposes so that all our code is not muddled up in one foldr.
+
+This helps the readability of your code is makes it more portable.
+
+To this effect, our project is going to be organised in the following way:
+
+```
+
+PROJECT_ROOT
+│
+├── main.tf                 # All other configuration.
+├── variables.tf            # Stores the structure of input variables
+├── terraform.tfvars        # The data of variables we want to load into our terraform project
+├── providers.tf            # Defines required providers and their configuration
+├── outputs.tf              # Stores our outputs
+└── README.md               # Required for root modules
+```
+
+Here is the official documentation of [Standard Module Structure](https://developer.hashicorp.com/terraform/language/modules/develop/structure) of terraform projects. It gives a more comprehensive breakdown of what tpe of code each folder should contain.
+
+
+
+
+
+
+
+
+
