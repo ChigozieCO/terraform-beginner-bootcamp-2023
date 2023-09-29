@@ -13,6 +13,10 @@ This week started out with the usual live stream that starts up our week.
     + [Attach Bucket Policy](#attach-bucket-policy)
       - [Served page on Cloudfront](#served-page-on-cloudfront)
 - [Root Module Structure](#root-module-structure)
+- [Restructure Root Module of our Project](#restructure-root-module-of-our-project)
+- [Variables in Terraform Cloud](#variables-in-terraform-cloud)
+- [Migrate State File to Local Environment From Terraform Cloud](#migrate-state-file-to-local-environment-from-terraform-cloud)
+- [`terraform.tfvars`](#terraform.tfvars)
 
 # Static Web Page
 
@@ -137,7 +141,7 @@ Now I when I enter the distributions domain name in my browser I can see m websi
 
 # Root Module structure
 
-When creating teeraform modules it is alwatys best to divide your code into different directories that serve different purposes so that all our code is not muddled up in one foldr.
+When creating terraform modules it is always best to divide your code into different directories that serve different purposes so that all our code is not muddled up in one folder.
 
 This helps the readability of your code is makes it more portable.
 
@@ -155,11 +159,124 @@ PROJECT_ROOT
 └── README.md               # Required for root modules
 ```
 
-Here is the official documentation of [Standard Module Structure](https://developer.hashicorp.com/terraform/language/modules/develop/structure) of terraform projects. It gives a more comprehensive breakdown of what tpe of code each folder should contain.
+Here is the official documentation of [Standard Module Structure](https://developer.hashicorp.com/terraform/language/modules/develop/structure) of terraform projects. It gives a more comprehensive breakdown of what type of code each folder should contain.
 
+# Restructure Root Module of our Project
 
+Taking the root module structure as we have stated above, I now go ahead to restructure the root module of my own project.
 
+I started out by creating the additional `tf` files I needed, which were:
 
+- outputs.tf
+- providers.tf
+- variables.tf
+- terraform.tfvars
+
+Starting with the `providers.tf` I removed the providers configuration from the `main.tf` file and added them in the `providers.tf` file.
+
+Next I took out the outputs configuration that was in the `main.tf` file and added it to the `outputs.tf` file.
+
+In other to be able to demonstrate the usefulness of the `variables.tf` file I added a tag to my bucket configuration in the `main.tf` file.
+
+In `main.tf` I included the below block of code:
+
+```hcl
+  tags = {
+    UserUuid = var.user_uuid
+  }
+
+```
+
+In my `variables.tf` file I include the following code block:
+
+```hcl
+variable "user_uuid" {
+  description = "The UUID of the user"
+  type        = string
+  validation {
+    condition        = can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$", var.user_uuid))
+    error_message    = "The user_uuid value is not a valid UUID."
+  }
+}
+```
+
+With this configuration in place I encountered errors while running the `tf plan` command 
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 8 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+This happened because there are no variables set in my `terraform.tfvars` file and because my state file is saved in terraform cloud it will not read my local files even if I were to input the vaerible in the `terraform.tfvars` file.
+
+A way around this will be to add the variable along with the `tf plan` command as shown below:
+
+```sh
+tf plan -var user_uuid='newvariable!'
+```
+
+This command will also throw an error because in my `variables.tf` we wrote a validation check that will ensure that the entered variable is in the format which we specified in the validation rule. And this variable entered is clearly not the same format as what it expects.
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 9 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+# Variables in Terraform Cloud 
+
+From the image above you can see that the command actually threw two errors, the first I just explained above. The second error however is as a result of my terraform cloud not having the required access to my aws account because I have not supplied it with my aws credentials.
+
+To resolve this error I have to head to terraform cloud and give it the necessary permissions.
+
+These are the steps required to do this:
+
+- Login to [terraform cloud](terraform.io)
+
+- Navigate to your workspace, the workspace for the project you are working on.
+
+- On the left hand pane click on the `variables` option.
+
+- When the page loads fully click on `add variable`
+
+- You will see that uou have two options `Terraform variable` & `Environment variable`. We can do this either ways but I will be setting mine as an `Environment variable`. So I click on that option.
+
+- This will open a form for you to enter you key and the value. Enter `AWS_ACCESS_KEY_ID` in the key column and your actual aws access key id in the value column.
+
+- Click the box at the end that says sensitive so that your access key id is not exposed.
+
+- Then click on `add variable`. 
+
+These last 4 instructions are demonstrated in the image below.
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 10 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+- Repeat this same process to add your `AWS_SECRET_ACCESS_KEY` and your default variable, for the default variable you can leave the sensitive unchecked if you please cos this value is not sensitive.
+
+At the end your terraform cloud should look like this (with any other env var you might have added)
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 11 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+# Migrate State File to Local Environment From Terraform Cloud
+
+Before I continue, we decided to migrate our state file from the cloud back to our local environment but before we do that we will first tear down the infrastructure to avoid having duplicates.
+
+First thing I did was to comment out all the new configurations added, which is basically the variable.tf and the tags.
+
+Now that I have already added my AWS credentials to my terraform cloud I can run `terraform destroy` and the command would run without errors.
+
+After destroying the infrastructure, to migrate the state file from the cloud all I have to do is to comment out the code block that contains `cloud`, `organisation`, `workspace` and `name`.
+
+Next I then delete my `.terraform.lock.hcl` file and my `.terraform` directory and run `terraform init` again.
+
+# `terraform.tfvars`
+
+ This is where you store your variables for your project. If your state file is stored locally your environment will read this file to populate your code with the value of the env var that is called in the configuration. 
+ 
+ This file should never be committed. It has been added to my `.gitignore` file so I won't make the mistake of committing it because most often than not it will contain senstive data.
+
+Eg of how you store variables in it:
+
+```hcl
+user_uuid="154f4e38-a1ac-42da-9c20-ad7a5ccfcfe1"
+```
+
+Now wherever terraform sees `user_uuid` called in my c onfiguration it will subsititute it with the value in the `terraform.tfvars` file. This helps keep secrets secret.
+
+I also went ahead and added this user_uuid and the value to my terraform cloud variables, as a Terraform Variable, so that whenever I am working from the terraform cloud I already have that value saved there.
 
 
 
