@@ -1,4 +1,4 @@
-![9](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/a459054f-f756-4258-85d2-490cff4efb82)# Getting Comfortable with Terraform and Terraform Cloud
+# Getting Comfortable with Terraform and Terraform Cloud
 
 This week started out with the usual live stream that starts up our week.
 
