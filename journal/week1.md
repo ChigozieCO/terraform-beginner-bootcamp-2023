@@ -1,4 +1,4 @@
-# Getting Comfortable with Terraform and Terraform Cloud
+![9](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/a459054f-f756-4258-85d2-490cff4efb82)# Getting Comfortable with Terraform and Terraform Cloud
 
 This week started out with the usual live stream that starts up our week.
 
@@ -16,7 +16,7 @@ This week started out with the usual live stream that starts up our week.
 - [Restructure Root Module of our Project](#restructure-root-module-of-our-project)
 - [Variables in Terraform Cloud](#variables-in-terraform-cloud)
 - [Migrate State File to Local Environment From Terraform Cloud](#migrate-state-file-to-local-environment-from-terraform-cloud)
-- [`terraform.tfvars`](#terraform.tfvars)
+- [`terraform.tfvars`](#terraformtfvars)
 
 # Static Web Page
 
@@ -202,7 +202,7 @@ variable "user_uuid" {
 
 With this configuration in place I encountered errors while running the `tf plan` command 
 
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 8 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+![Error](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/754440de-3fe6-4c52-a288-325865977a34)
 
 This happened because there are no variables set in my `terraform.tfvars` file and because my state file is saved in terraform cloud it will not read my local files even if I were to input the vaerible in the `terraform.tfvars` file.
 
@@ -214,7 +214,7 @@ tf plan -var user_uuid='newvariable!'
 
 This command will also throw an error because in my `variables.tf` we wrote a validation check that will ensure that the entered variable is in the format which we specified in the validation rule. And this variable entered is clearly not the same format as what it expects.
 
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 9 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+![Another error](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/972820db-43c6-4329-afe7-dfd0ccaf7ded)
 
 # Variables in Terraform Cloud 
 
@@ -242,13 +242,13 @@ These are the steps required to do this:
 
 These last 4 instructions are demonstrated in the image below.
 
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 10 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+![Configuration sequence](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/b13edd5e-6031-40b7-8fd7-924af6542bc9)
 
 - Repeat this same process to add your `AWS_SECRET_ACCESS_KEY` and your default variable, for the default variable you can leave the sensitive unchecked if you please cos this value is not sensitive.
 
 At the end your terraform cloud should look like this (with any other env var you might have added)
 
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 11 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+![Terraform cloud variables](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/035ef123-d8d3-4f9d-bfbb-19ed8335b5ab)
 
 # Migrate State File to Local Environment From Terraform Cloud
 
