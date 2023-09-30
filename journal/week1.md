@@ -25,11 +25,9 @@ This week started out with the usual live stream that starts up our week.
     + [Import Random String from Random Provider](#import-random-string-from-random-provider)
       - [Official documentation](#official-documentation)
     + [Delete Random Provider](#delete-random-provider)
-      - [Undeclared Variable Error](#undeclared-variable-error)
+- [Undeclared Variable Error](#undeclared-variable-error)
     + [Declare Variable `bucket_name`](#declare-variable-bucket_name)
 - [Configuration Drift](#configuration-drift)
-
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
 
 # Static Web Page
@@ -361,7 +359,7 @@ bucket = var.bucket_name
 
 Then I add the value of the bucket_name as a variable in the `terraform.tfvars` file.
 
-#### Undeclared Variable Error
+# Undeclared Variable Error
 
 Now when I run `terraform plan` again I still have an error. This error occurs because we have not defined the variable in the `variable.tf` file. Whenever we have a variable we need to declare it in the `variables.tf` file.
 
