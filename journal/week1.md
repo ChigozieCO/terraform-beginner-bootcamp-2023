@@ -17,6 +17,20 @@ This week started out with the usual live stream that starts up our week.
 - [Variables in Terraform Cloud](#variables-in-terraform-cloud)
 - [Migrate State File to Local Environment From Terraform Cloud](#migrate-state-file-to-local-environment-from-terraform-cloud)
 - [`terraform.tfvars`](#terraformtfvars)
+- [How to recover when you lose your Statefile.](#how-to-recover-when-you-lose-your-statefile)
+    + [Fix Missing Resources with Terraform Import](#how-to-recover-when-you-lose-your-statefile)
+      - [See the Official Documentation](#see-the-official-documentation)
+      - [AWS S3 Bucket Import Documentation](#aws-s3-bucket-import-documentation)
+- [Remove Random Provider](#remove-random-provider)
+    + [Import Random String from Random Provider](#import-random-string-from-random-provider)
+      - [Official documentation](#official-documentation)
+    + [Delete Random Provider](#delete-random-provider)
+      - [Undeclared Variable Error](#undeclared-variable-error)
+    + [Declare Variable `bucket_name`](#declare-variable-bucket_name)
+- [Configuration Drift](#configuration-drift)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 
 # Static Web Page
 
@@ -296,7 +310,7 @@ The command to use is:
 terraform import aws_s3_bucket.bucket bucket-name
 ```
 
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 12 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+![terraform import](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/8ec03200-bbe1-4908-adda-5373d4b0c786)
 
 #### See the Official Documentation 
 [Terraform Import](https://developer.hashicorp.com/terraform/cli/import)
@@ -312,7 +326,7 @@ Now that I have a statefile I run the `tf plan` command to see the behaviour of 
 
 However I notice that because of my use of the random provider, terraform is now trying to tear down the existing bucket and build a new one with a new name.
 
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 13 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+![random provider](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/4ecd58ed-9315-45b5-bffe-8941407164ae)
 
 This will be a problem in an instance where you do not want the bucket torn down and so we would stop making use of the random provider in our configuration.
 
@@ -328,7 +342,7 @@ terraform import random_string.bucket_name <bucket name>
 
 #### Official documentation
 
-[import Random String](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string#import)
+[Import Random String](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string#import)
 
 This however doesnt fix our issue so we still go ahead and take out the random provider in our configuration.
 
@@ -351,7 +365,7 @@ Then I add the value of the bucket_name as a variable in the `terraform.tfvars` 
 
 Now when I run `terraform plan` again I still have an error. This error occurs because we have not defined the variable in the `variable.tf` file. Whenever we have a variable we need to declare it in the `variables.tf` file.
 
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 14 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+![undeclared variable](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/25075be6-5b4c-48f8-b1ac-511134a218b3)
 
 Error one is explained above. I will resolve it by declaring my `bucket_name` variable in the `variables.tf` file.
 
