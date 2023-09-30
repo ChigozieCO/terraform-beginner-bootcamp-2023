@@ -17,6 +17,18 @@ This week started out with the usual live stream that starts up our week.
 - [Variables in Terraform Cloud](#variables-in-terraform-cloud)
 - [Migrate State File to Local Environment From Terraform Cloud](#migrate-state-file-to-local-environment-from-terraform-cloud)
 - [`terraform.tfvars`](#terraformtfvars)
+- [How to recover when you lose your Statefile.](#how-to-recover-when-you-lose-your-statefile)
+    + [Fix Missing Resources with Terraform Import](#how-to-recover-when-you-lose-your-statefile)
+      - [See the Official Documentation](#see-the-official-documentation)
+      - [AWS S3 Bucket Import Documentation](#aws-s3-bucket-import-documentation)
+- [Remove Random Provider](#remove-random-provider)
+    + [Import Random String from Random Provider](#import-random-string-from-random-provider)
+      - [Official documentation](#official-documentation)
+    + [Delete Random Provider](#delete-random-provider)
+- [Undeclared Variable Error](#undeclared-variable-error)
+    + [Declare Variable `bucket_name`](#declare-variable-bucket_name)
+- [Configuration Drift](#configuration-drift)
+
 
 # Static Web Page
 
@@ -277,6 +289,131 @@ user_uuid="154f4e38-a1ac-42da-9c20-ad7a5ccfcfe1"
 Now wherever terraform sees `user_uuid` called in my c onfiguration it will subsititute it with the value in the `terraform.tfvars` file. This helps keep secrets secret.
 
 I also went ahead and added this user_uuid and the value to my terraform cloud variables, as a Terraform Variable, so that whenever I am working from the terraform cloud I already have that value saved there.
+
+# How to recover when you lose your Statefile. 
+
+If you lose your statefile, you will most likely have to tear down all your cloud infrastructure manually.
+
+You can use terraform import but it won't for all cloud resources. You need check the terraform providers documentation for which resources support import.
+
+If you have a lot of resources in your terraform configuration you might not be able to recover everything with terraform import because not all resources allow import. 
+
+The general rule is to make sure you store your statefile somewhere like terraform cloud or an S3 bucket.
+
+### Fix Missing Resources with Terraform Import
+
+The command to use is:
+
+```sh
+terraform import aws_s3_bucket.bucket bucket-name
+```
+
+![terraform import](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/8ec03200-bbe1-4908-adda-5373d4b0c786)
+
+#### See the Official Documentation 
+[Terraform Import](https://developer.hashicorp.com/terraform/cli/import)
+
+#### AWS S3 Bucket Import Documentation
+[AWS S3 Bucket Import](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket#import)
+
+Running the above command will import the S3 bucket and create a statefile for us.
+
+# Remove Random Provider
+
+Now that I have a statefile I run the `tf plan` command to see the behaviour of terraform, I am trying to test out whether or not terraform will recognise that my configuration is in its correct state.
+
+However I notice that because of my use of the random provider, terraform is now trying to tear down the existing bucket and build a new one with a new name.
+
+![random provider](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/4ecd58ed-9315-45b5-bffe-8941407164ae)
+
+This will be a problem in an instance where you do not want the bucket torn down and so we would stop making use of the random provider in our configuration.
+
+### Import Random String from Random Provider 
+
+Before taking out the random provider we try to import random string to see if that will fix our issue.
+
+The command we used:
+
+```sh
+terraform import random_string.bucket_name <bucket name>
+```
+
+#### Official documentation
+
+[Import Random String](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string#import)
+
+This however doesnt fix our issue so we still go ahead and take out the random provider in our configuration.
+
+### Delete Random Provider
+
+So I go to my `providers.tf` file and delete the random provider code block.
+
+I also take out the `random_string` code block in the `main.tf` file.
+
+In the `aws_s3_bucket` resource I edit the bucket line (the line that has the bucket name) with the variable of the bucket name as I will be adding the bucket name to my `terraform.tfvars` file.
+
+```hcl
+...
+bucket = var.bucket_name
+```
+
+Then I add the value of the bucket_name as a variable in the `terraform.tfvars` file.
+
+# Undeclared Variable Error
+
+Now when I run `terraform plan` again I still have an error. This error occurs because we have not defined the variable in the `variable.tf` file. Whenever we have a variable we need to declare it in the `variables.tf` file.
+
+![undeclared variable](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/25075be6-5b4c-48f8-b1ac-511134a218b3)
+
+Error one is explained above. I will resolve it by declaring my `bucket_name` variable in the `variables.tf` file.
+
+Error two occurs because I still have my `random_bucket_name` as a value I would want terraform to output after builing my infrastructure when I am no longer using the random provider.
+
+The solution to resolving this error is simply to delete that line of code from my `outputs.tf` file.
+
+### Declare Variable `bucket_name`
+
+Now I will declare the variable `bucket_name` in the `variables.tf` file along with a validation for it with the code below:
+
+```hcl
+variable "bucket_name" {
+  description = "The name of the S3 bucket"
+  type        = string
+
+  validation {
+    condition     = (
+      length(var.bucket_name) >= 3 && length(var.bucket_name) <= 63 && 
+      can(regex("^[a-z0-9][a-z0-9-.]*[a-z0-9]$", var.bucket_name))
+    )
+    error_message = "The bucket name must be between 3 and 63 characters, start and end with a lowercase letter or number, and can contain only lowercase letters, numbers, hyphens, and dots."
+  }
+}
+```
+
+In the `outputs.tf` file, I delete the previous code there and replaced with the below:
+
+```hcl
+output "bucket_name" {
+  value = aws_s3_bucket.website_bucket.bucket
+}
+```
+
+In the `main.tf` I changed the bucket name in the `aws_s3_bucket` resource from example to website_bucket which the bucket name value points to in the outputs.tf.
+
+When I run terraform plan I do not run into any error.
+
+# Configuration Drift
+
+Configuration drift is when the configuration of an environment “drifts”, or in other words, gradually changes, and is no longer consistent with an organization's requirements. 
+
+Configuration drift happens when changes to software and hardware are made ad hoc, without being recorded or tracked.
+
+Configuration drift as it relates to terraform refers to when your infrastructure is different from what is states in your statefile. Your statefile is designed to accurately tell what resources you having in your cloud environment at any point and in the correct state it is in.
+
+If someone goes and delete or modifies cloud resource manually through ClickOps while the statefile still exists, terraform will know and rebuild that resource when next you run `terraform apply`
+
+If we run `terraform plan` it with attempt to put our infrstraucture back into the expected state fixing Configuration Drift.
+
 
 
 
