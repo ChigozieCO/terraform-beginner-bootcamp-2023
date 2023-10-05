@@ -28,6 +28,9 @@ This week started out with the usual live stream that starts up our week.
 - [Undeclared Variable Error](#undeclared-variable-error)
     + [Declare Variable `bucket_name`](#declare-variable-bucket_name)
 - [Configuration Drift](#configuration-drift)
+- [Nested Modules](##nested-modules)
+- [Referencing Modules in Configuration (Module Sources)](#referencing-modules-in-configuration-module-sources)
+- [Terraform Refresh](#terraform-refresh)
 
 
 # Static Web Page
@@ -282,7 +285,7 @@ Next I then delete my `.terraform.lock.hcl` file and my `.terraform` directory a
 
 Eg of how you store variables in it:
 
-```hcl
+```tf
 user_uuid="154f4e38-a1ac-42da-9c20-ad7a5ccfcfe1"
 ```
 
@@ -352,7 +355,7 @@ I also take out the `random_string` code block in the `main.tf` file.
 
 In the `aws_s3_bucket` resource I edit the bucket line (the line that has the bucket name) with the variable of the bucket name as I will be adding the bucket name to my `terraform.tfvars` file.
 
-```hcl
+```tf
 ...
 bucket = var.bucket_name
 ```
@@ -467,7 +470,7 @@ I can do this by either running the `terraform validate` command or the `terrafo
 
 After running the plan command, I discover that I have some errors.
 
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 1 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+![errors](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/176a0998-7623-4901-a213-4715fb821708)
 
 This error is as a result of not having our variables declared in the top level, even though we have it declared in the module we still need to declare it in the top level.
 
