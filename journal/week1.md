@@ -192,7 +192,7 @@ In other to be able to demonstrate the usefulness of the `variables.tf` file I a
 
 In `main.tf` I included the below block of code:
 
-```hcl
+```tf
   tags = {
     UserUuid = var.user_uuid
   }
@@ -201,7 +201,7 @@ In `main.tf` I included the below block of code:
 
 In my `variables.tf` file I include the following code block:
 
-```hcl
+```tf
 variable "user_uuid" {
   description = "The UUID of the user"
   type        = string
@@ -413,6 +413,106 @@ Configuration drift as it relates to terraform refers to when your infrastructur
 If someone goes and delete or modifies cloud resource manually through ClickOps while the statefile still exists, terraform will know and rebuild that resource when next you run `terraform apply`
 
 If we run `terraform plan` it with attempt to put our infrstraucture back into the expected state fixing Configuration Drift.
+
+# Nested Modules
+
+Terraform modules are self-contained packages of Terraform configurations that are managed as a group. You can create modules for each project you are working on and they are very reusable if configured properly.
+
+It is recommend to place modules in a `modules` directory when locally developing modules but you can name it whatever you like.
+
+To begin I created the directory structure I will be using for my Module.
+
+The directory structure is shown below:
+
+```
+modules
+└── terrahouse_aws
+    ├── LICENSE
+    ├── main.tf
+    ├── outputs.tf
+    ├── README.md
+    └── variables.tf
+```
+
+Now I will isolate the inner infrastructure, which is basically my bucket, and any other thing related to storage.
+
+We want them in its own file. Everything related to a delivery will be located in it's own file.
+
+I moved my previous configuration from the files they were in previously (`main.tf`, `variables.tf`, `variables.tf`) into their respective files in the `terrahouse_aws` module.
+
+# Referencing Modules in Configuration (Module Sources)
+
+After moving my infrastructure into the nested module, I need a way to refernce them in the general infrastructure. I do this by calling the module in the configuration in the `main.tf` file outside the module. As shown below:
+
+```tf
+module "terrahouse_aws" {
+  source = "./modules/terrahouse_aws"
+  user_uuid = var.user_uuid
+  bucket_name = var.bucket_name
+}
+```
+
+You should note that we can call our modules from different sources, using the source we can import the module from various places eg:
+- locally
+- Github
+- Terraform Registry
+
+In the above sample code block, I imported my module from a local source.
+
+[Modules Sources](https://developer.hashicorp.com/terraform/language/modules/sources)
+
+With my configuratgion in place the next thing I did was to validate the accuracy of my configuration.
+
+I can do this by either running the `terraform validate` command or the `terraform plan` command. I chose to use the latter.
+
+After running the plan command, I discover that I have some errors.
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 1 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+This error is as a result of not having our variables declared in the top level, even though we have it declared in the module we still need to declare it in the top level.
+
+This is what I now do by adding the following code blocks in the `variable.tf` file in the top level.
+
+```tf
+variable "user_uuid" {
+    type = string
+}
+
+variable "bucket_name" {
+    type = string
+}
+```
+
+Here I didn't make it as elaborate as before because I have already done that at the module level where I added the necessary validator checks.
+
+Running the plan command again and I can see that trhere are no more errors.
+
+Now I apply my changes by running the `tf apply` command.
+
+Although my deploy was successful I realised I had no outputs, this was because, just as with the case lf the variables, I need to also have an `outputs.tf` file declaring the outputs I wants in my top level just as I did in the module.
+
+Therefore, in the `outputs.tf` file at the top level in include the following code:
+
+```tf
+output "bucket_name" {
+  description = "Bucket name for our static website hosting"
+  value = module.terrahouse_aws.bucket_name
+}
+```
+
+# Terraform Refresh
+
+The `terraform refresh` command reads the current settings from all managed remote objects and updates the Terraform state to match. This command is deprecated though.
+
+This won't modify your real remote objects, but it will modify the Terraform state.
+
+You shouldn't typically need to use this command, because Terraform automatically performs the same refreshing actions as a part of creating a plan in both the `terraform plan` and `terraform apply` commands.
+
+The way to use the command uis shown below:
+
+```sh
+terraform apply -refresh-only -auto-approve
+```
 
 
 
