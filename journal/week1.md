@@ -723,9 +723,66 @@ Now I go ahead and apply my changes. You can see my uploaded buckets below.
 
 ![S3 Objects](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/d62d5f06-56e5-4533-9904-f3c2a5121123)
 
+# Terraform Data Sources
 
+Data sources allow Terraform to use information defined outside of Terraform, defined by another separate Terraform configuration, or modified by functions.
 
+A data source is accessed via a special kind of resource known as a data resource, declared using a data block shown below.
 
+This allows use to source data from cloud resources.
+
+This is useful when we want to reference cloud resources without importing them.
+
+```tf
+data "aws_caller_identity" "current" {}
+output "account_id" {
+  value = data.aws_caller_identity.current.account_id
+}
+```
+
+[Data Sources](https://developer.hashicorp.com/terraform/language/data-sources)
+
+# Terraform Locals
+
+Locals allows us to define local variables.
+It can be very useful when we need transform data into another format and have referenced a varaible.
+
+```tf
+locals {
+  s3_origin_id = "MyS3Origin"
+}
+```
+[Local Values](https://developer.hashicorp.com/terraform/language/values/locals)
+
+# Working with JSON
+
+We use the jsonencode to create the json policy inline in the hcl.
+
+```tf
+> jsonencode({"hello"="world"})
+{"hello":"world"}
+```
+
+[jsonencode](https://developer.hashicorp.com/terraform/language/functions/jsonencode)
+
+# CDN Implementation in Terraform
+
+To create the cloudfront distribution via terraform we created two new file `resource-cdn.tf` and `resource-storage.tf`. These files were created so that each resource group has its own file and the `main.tf` file does not get too crowded making it hard to read.
+
+The contents of the files:
+
+- [resource-cdn.tf]()
+- [resource-storage.tf]()
+
+The image below shows the deployed cdn and the working site.
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 3 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 4 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 5 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 6 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
 
