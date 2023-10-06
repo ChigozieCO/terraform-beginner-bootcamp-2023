@@ -44,6 +44,10 @@ This week started out with the usual live stream that starts up our week.
 - [Declare the Website File Variable](#declare-the-website-file-variable)
   -  [`terraform-beginner-bootcamp-2023/variables.tf`](#terraform-beginner-bootcamp-2023variablestf)
   -  [`.tfvars` File](#tfvars-file)
+- [Terraform Data Sources](#terraform-data-sources)
+- [Terraform Locals}(#terraform-locals)
+- [Working with JSON](#working-with-json)
+- [CDN Implementation in Terraform](#cdn-implementation-in-terraform)
 
 
 # Static Web Page
@@ -771,18 +775,18 @@ To create the cloudfront distribution via terraform we created two new file `res
 
 The contents of the files:
 
-- [resource-cdn.tf]()
-- [resource-storage.tf]()
+- [resource-cdn.tf](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/blob/3c2c56a078138a18e9660fd8ac8e2063b8ca7055/modules/terrahouse_aws/resource-cdn.tf)
+- [resource-storage.tf](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/blob/3c2c56a078138a18e9660fd8ac8e2063b8ca7055/modules/terrahouse_aws/resource-storage.tf)
 
 The image below shows the deployed cdn and the working site.
 
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 3 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+![Tf CLI](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/c0c85d01-67b5-4e3c-af8a-0619f2cbd687)
 
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 4 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+![Deployed cdn](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/9ef05679-6eb0-4182-9408-00e52b5e4705)
 
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 5 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+![cdn domain name](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/cb755c85-c46e-45bc-834d-d7844fdd3cff)
 
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 6 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+![Static website](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/ac5d9727-55f7-4b14-b6cb-1f457528f6bd)
 
 
 
