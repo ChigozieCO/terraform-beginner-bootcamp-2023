@@ -32,8 +32,8 @@ This week started out with the usual live stream that starts up our week.
 - [Referencing Modules in Configuration (Module Sources)](#referencing-modules-in-configuration-module-sources)
 - [Terraform Refresh](#terraform-refresh)
 - [S3 Static Website Hosting](#s3-static-website-hosting)
-      + [`modules/terraform_aws/outputs.tf`](#modulesterraform_awsoutputstf)
-      + [`terraform-beginner-bootcamp-2023/outputs.tf`](#terraform-beginner-bootcamp-2023outputstf)
+  - [`modules/terraform_aws/outputs.tf`](#modulesterraform_awsoutputstf)
+  - [`terraform-beginner-bootcamp-2023/outputs.tf`](#terraform-beginner-bootcamp-2023outputstf)
 - [Putting Objects into S3 via Terraform](#putting-objects-into-s3-via-terraform)
 - [Working with Files in Terraform](#working-with-files-in-terraform)
     + [Fileexists function](#fileexists-function)
@@ -42,9 +42,8 @@ This week started out with the usual live stream that starts up our week.
 - [Terraform Console](#terraform-console)
 - [Website Files](#website-files)
 - [Declare the Website File Variable](#declare-the-website-file-variable)
-      + [`modules/terraform_aws/variables.tf`](#modulesterraform_awsvariablestf)
-      + [`terraform-beginner-bootcamp-2023/variables.tf`](#terraform-beginner-bootcamp-2023variablestf)
-      + [`.tfvars` File](#tfvars-file)
+  -  [`terraform-beginner-bootcamp-2023/variables.tf`](#terraform-beginner-bootcamp-2023variablestf)
+  -  [`.tfvars` File](#tfvars-file)
 
 
 # Static Web Page
