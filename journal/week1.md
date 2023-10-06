@@ -788,6 +788,90 @@ The image below shows the deployed cdn and the working site.
 
 ![Static website](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/ac5d9727-55f7-4b14-b6cb-1f457528f6bd)
 
+# Setup Content Version
+
+Now we have cloudfront setup and the s3 bucket setup and serving a website however we would like it to invalidate the cache when files change.
+
+We want cloudfront to only cache when we want it to explicitly cache and we will do that by setting a content version.
+
+I started by adding a `content_version` variable as shown below:
+
+```tf
+
+variable "content_version" {
+  description = "The content version. Should be a positive integer starting at 1."
+  type        = number
+
+  validation {
+    condition     = var.content_version > 0 && floor(var.content_version) == var.content_version
+    error_message = "The content_version must be a positive integer starting at 1."
+  }
+}
+```
+
+I also added this variable at the top level:
+
+```tf
+variable "content_version" {
+  type        = number
+}
+
+I then added the variable to my `.tfvars` file
+
+```tf
+content_version=var.content_version
+```
+
+In our `main.tf` file on the top level we added the content_version variable.
+
+### Ignore file Changes with Terraform Lifecycle
+
+Although we added the etag in other for terraform to know when there is a change in our website documents we do not want the infrasdtructure to change everytime there is a change in those documents. We only want this change to happen when there is a change in the content version.
+
+We will ignore the etag changes by adding the `ignore_changes` flag in the `lifecycle` function.
+
+Lifecycle is a nested block that can appear within a resource block. The lifecycle block and its contents are meta-arguments, available for all resource blocks regardless of type.
+
+https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle
+
+This is how we used it:
+
+```tf
+  lifecycle {
+    ignore_changes = [etag]
+  }
+```
+
+### Terraform Data
+
+Now any change we make to the documents will not we applied to our infrastructure but this is not exactly what we want because we need changes to be applied when there is a content version change.
+
+And so we will need to add another flag to the lifecycle.
+
+Before then though, we need to tie over content version to a resource because we can't directly put the content version in the lifecycle.
+
+To achieve what we need we will use `terraform data`.
+
+Plain data values such as Local Values and Input Variables don't have any side-effects to plan against and so they aren't valid in replace_triggered_by. You can use terraform_data's behavior of planning an action each time input changes to indirectly use a plain value to trigger replacement.
+
+https://developer.hashicorp.com/terraform/language/resources/terraform-data
+
+We will add this to the `resource-storage.tf` file in our module, as seen below:
+
+```tf
+resource "terraform_data" "content_version" {
+  input = var.content_version
+}
+```
+
+Now to apply the trigger so it triggers when tere is a change in the content version we add the below line of code to our lifecycle:
+
+```tf
+
+    replace_triggered_by = [terraform_data.content_version.output]
+```
+
+
 
 
 
