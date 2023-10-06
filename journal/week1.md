@@ -45,7 +45,7 @@ This week started out with the usual live stream that starts up our week.
   -  [`terraform-beginner-bootcamp-2023/variables.tf`](#terraform-beginner-bootcamp-2023variablestf)
   -  [`.tfvars` File](#tfvars-file)
 - [Terraform Data Sources](#terraform-data-sources)
-- [Terraform Locals}(#terraform-locals)
+- [Terraform Locals](#terraform-locals)
 - [Working with JSON](#working-with-json)
 - [CDN Implementation in Terraform](#cdn-implementation-in-terraform)
 
