@@ -517,6 +517,201 @@ The way to use the command uis shown below:
 terraform apply -refresh-only -auto-approve
 ```
 
+# S3 Static Website Hosting
+
+At the beginning of this week we learnt how to setup Static Website hosting via ClickOps however now we will repeat that whole process using terraform.
+
+The below code is the configuration for the S3 Static Website Hosting:
+
+```tf
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_website_configuration
+resource "aws_s3_bucket_website_configuration" "website_configuration" {
+  bucket = aws_s3_bucket.website_bucket.bucket
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "error.html"
+  }
+}
+```
+
+Now I run the `terraform plan` command to check the accuracy and visualise the plan for our infrastructure.
+
+Seeing that everything is in order, I ran the `tf apply` command to deploy the infrastructure.
+
+I then added configuration to output the website endpoint.
+
+#### `modules/terraform_aws/outputs.tf`
+
+```tf
+output "website_endpoint" {
+  value = aws_s3_bucket_website_configuration.website_configuration.website_endpoint
+}
+```
+
+#### `terraform-beginner-bootcamp-2023/outputs.tf`
+
+```tf
+
+output "s3_website_endpoint" {
+  description = "S3 Static Website hosting endpoint"
+  value = module.terrahouse_aws.website_endpoint
+}
+```
+
+# Putting Objects into S3 via Terraform
+
+The configuration to put objects into your S3 bucket via terrafrom is shown below:
+
+```tf
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object
+resource "aws_s3_object" "index_html" {
+  bucket = aws_s3_bucket.website_bucket.bucket
+  key = index.html
+  source = var.index_html_filepath
+
+  etag = filemd5(var.index_html_filepath)
+}
+
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object
+resource "aws_s3_object" "error_html" {
+  bucket = aws_s3_bucket.website_bucket.bucket
+  key    = "error.html"
+  source = var.error_html_filepath
+
+  etag = filemd5(var.error_html_filepath)
+}
+```
+
+The above code was added to the `main.tf` file of my module.
+
+# Working with Files in Terraform
+
+There are various ways we can work with files in terraform. They include:
+
+### Fileexists function
+
+This is a built in terraform function to check the existance of a file.
+
+```tf
+condition = fileexists(var.error_html_filepath)
+```
+
+https://developer.hashicorp.com/terraform/language/functions/fileexists
+
+### Filemd5
+
+This is a function that will create a hash based on the contents of the file. So if the contents of the file changes, the hash also changes.
+
+https://developer.hashicorp.com/terraform/language/functions/filemd5
+
+We use this in our configuration so that terraform can pick up the changes in our file even if the configuration remains the same. 
+
+This is necessary because terraform only detects changes in the statefile, if changes are made to a file alone the statefile has no way of registering this change unless you make use of the etag with the `filemd5` function.
+
+Now when the hash changes, the value of the etag will change in the statefile and terraform will know there's been a change somewhere.
+
+we used this in our configuration, in the `aws_s3_object` block as shown below:
+
+```tf
+
+  etag = filemd5(var.index_html_filepath)
+```
+
+### Path Variable
+
+In terraform there is a special variable called `path` that allows us to reference local paths:
+- path.module = get the path for the current module
+- path.root = get the path for the root module
+[Special Path Variable](https://developer.hashicorp.com/terraform/language/expressions/references#filesystem-and-workspace-info)
+
+
+resource "aws_s3_object" "index_html" {
+  bucket = aws_s3_bucket.website_bucket.bucket
+  key    = "index.html"
+  source = "${path.root}/public/index.html"
+}
+
+# Terraform Console
+
+Terraform console is an interactive way to troubleshoot and debug stuff in terraform. It can simply be run with the command:
+
+```sh
+terraform console
+```
+
+# Website Files
+
+I created a new directory called `public` that will house our two website files `index.html` and `error.html`. As seen:
+
+```
+public
+├── error.html
+└── index.html
+```
+
+# Declare the Website File Variable
+
+Instead of encoding the filepaths of our website files, we decided to declare then as variables.
+
+And so as we have been doing from the beginning of this project, we first declare the variable in the module's variable.tf file.
+
+#### `modules/terraform_aws/variables.tf`
+
+```tf
+variable "index_html_filepath" {
+  description = "The file path for index.html"
+  type        = string
+
+  validation {
+    condition     = fileexists(var.index_html_filepath)
+    error_message = "The provided path for index.html does not exist."
+  }
+}
+
+variable "error_html_filepath" {
+  description = "The file path for error.html"
+  type        = string
+
+  validation {
+    condition     = fileexists(var.error_html_filepath)
+    error_message = "The provided path for error.html does not exist."
+  }
+}
+```
+
+#### `terraform-beginner-bootcamp-2023/variables.tf`
+
+In the variables.tf file of the top directory I added the below code:
+
+```tf
+variable "index_html_filepath" {
+  type = string
+}
+
+variable "error_html_filepath" {
+  type = string
+}
+```
+
+#### `.tfvars` File
+
+I also added these codes to the `terraform.tfvars` and the `terraform.tfvars.example` in the top directory.
+
+```tf
+index_html_filepath="/workspace/terraform-beginner-bootcamp-2023/public/index.html"
+error_html_filepath="/workspace/terraform-beginner-bootcamp-2023/public/error.html"
+```
+
+Now I go ahead and apply my changes. You can see my uploaded buckets below.
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 2 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+
 
 
 
