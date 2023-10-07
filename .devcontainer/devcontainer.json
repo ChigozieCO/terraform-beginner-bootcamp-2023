@@ -14,12 +14,13 @@
 				"ms-python.python",
 				"42Crunch.vscode-openapi",
 				"amazonwebservices.aws-toolkit-vscode",
-        "hashicorp.terraform"
+				"ms-vscode-remote.remote-containers",
+        			"hashicorp.terraform"
 			],
 			"settings": {
 				"terminal.integrated.fontSize": 14,
 				"editor.fontSize": 14,
-				"workbench.colorTheme": "Dark Modern"
+				"workbench.colorTheme": "Default Dark Modern"
 			}
 		}
 		
