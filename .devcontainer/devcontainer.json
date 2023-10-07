@@ -1,5 +1,6 @@
 {
 	"name": "Terrahouse Configuration",
+	"image": "mcr.microsoft.com/devcontainers/universal:2",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
@@ -14,7 +15,6 @@
 				"ms-python.python",
 				"42Crunch.vscode-openapi",
 				"amazonwebservices.aws-toolkit-vscode",
-				"ms-vscode-remote.remote-containers",
         			"hashicorp.terraform"
 			],
 			"settings": {
