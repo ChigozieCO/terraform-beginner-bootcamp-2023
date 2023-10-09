@@ -670,7 +670,7 @@ terraform console
 
 Here is an example of using the terraform console, here the console was used to list files in a particular folder
 
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 7 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+![tf console cli](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/4bbe9c09-8216-47e2-a94b-c595942499c1)
 
 # Website Files
 
