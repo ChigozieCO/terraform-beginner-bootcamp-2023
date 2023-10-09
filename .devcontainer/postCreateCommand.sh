@@ -10,6 +10,9 @@ cp $PROJECT_ROOT/terraform.tfvars.example $PROJECT_ROOT/terraform.tfvars
 source ./bin/install_aws_cli_codespace
 source ./bin/set_tf_alias_codespace
 
+# Install Http Live Server
+npm install --global http-server
+
 
       
       

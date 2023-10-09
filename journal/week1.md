@@ -55,6 +55,7 @@ This week started out with the usual live stream that starts up our week.
 - [Provisioners](#provisioners)
     + [Local Exec](#local-exec)
     + [Remote Exec](#remote-exec)
+- [For Each Expressions](#for-each-expressions)
 
 
 # Static Web Page
@@ -667,6 +668,10 @@ Terraform console is an interactive way to troubleshoot and debug stuff in terra
 terraform console
 ```
 
+Here is an example of using the terraform console, here the console was used to list files in a particular folder
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 7 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 # Website Files
 
 I created a new directory called `public` that will house our two website files `index.html` and `error.html`. As seen:
@@ -964,6 +969,38 @@ https://developer.hashicorp.com/terraform/language/resources/provisioners/remote
 
 The reason it is not recommended is that terraform is not a configuration management tool, we just save our statefile there.
 
-I also the cloudfront url as outputs in the outputs.tf files in the module and top level.
+I also added the cloudfront url as outputs in the outputs.tf files in the module and top level.
 
 I then ran the tf apply command and when there was a change to the content version terraform was able to invalidate the cloudfront cache and serve my new content immediately.
+
+# For Each Expressions
+
+For each allows us to enumerate over complex data types
+
+```sh
+[for s in var.list : upper(s)]
+```
+
+This is mostly useful when you are creating multiples of a cloud resource and you want to reduce the amount of repetitive terraform code.
+
+[For Each Expressions](https://developer.hashicorp.com/terraform/language/expressions/for)
+
+We created a new `aws_s3_object` resource to upload assets and made use for the `for_each` function to iteratively upload our assets into our s3 buckets.
+
+In other not to hardcode the file paths we defined a variable called `assets_path` and added it to the necessary files.
+
+The code for the upload assets resource can be seen below:
+
+```tf
+resource "aws_s3_object" "upload_assets" {
+  for_each = fileset(var.assets_path,"*.{jpg,png,gif}")
+  bucket = aws_s3_bucket.website_bucket.bucket
+  key    = "assets/${each.key}"
+  source = "${var.assets_path}/${each.key}"
+  etag = filemd5("${var.assets_path}${each.key}")
+  lifecycle {
+    replace_triggered_by = [terraform_data.content_version.output]
+    ignore_changes = [etag]
+  }
+}
+```
