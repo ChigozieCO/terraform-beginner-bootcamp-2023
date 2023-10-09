@@ -48,6 +48,13 @@ This week started out with the usual live stream that starts up our week.
 - [Terraform Locals](#terraform-locals)
 - [Working with JSON](#working-with-json)
 - [CDN Implementation in Terraform](#cdn-implementation-in-terraform)
+- [Setup Content Version](#setup-content-version)
+    + [Ignore file Changes with Terrafrom Lifecycle](#ignore-file-changes-with-terraform-lifecycle)
+    + [Terraform Data](#terraform-data)
+- [Invalidate Cache in the Cloudfront Distribution via Terraform](#invalidate-cache-in-the-cloudfront-distribution-via-terraform)
+- [Provisioners](#provisioners)
+    + [Local Exec](#local-exec)
+    + [Remote Exec](#remote-exec)
 
 
 # Static Web Page
@@ -867,11 +874,96 @@ resource "terraform_data" "content_version" {
 Now to apply the trigger so it triggers when tere is a change in the content version we add the below line of code to our lifecycle:
 
 ```tf
-
     replace_triggered_by = [terraform_data.content_version.output]
 ```
 
+# Invalidate Cache in the Cloudfront Distribution via Terraform
 
+There really isn't a way to invalidate cacheeith the latest AWS provider so we will and so we will use the terraform data. 
 
+Using `null resource` was the old way of doing it, `terraform data` is the new way of doing it.
 
+Terraform data is a better way of doing it because it doesn't require you to install a provider, we don't have to pull anything down.
 
+The idea here is that we want to have it in place so that when there is a change to our file or our content version, the content version will trigger a provisionmal `local exec` which is going to run a cli command locally to invalidate the cache.
+
+To implement this, we will put the configuration in our `resource-cdn.tf` file:
+
+```tf
+resource "terraform_data" "invalidate_cache" {
+  triggers_replace = terraform_data.content_version.output
+
+  provisioner "local-exec" {
+    # https://developer.hashicorp.com/terraform/language/expressions/strings#heredoc-strings
+    command = <<COMMAND
+aws cloudfront create-invalidation \
+--distribution-id ${aws_cloudfront_distribution.s3_distribution.id} \
+--paths '/*'
+    COMMAND
+
+  }
+}
+```
+
+When you invalidate cache, you can tell it to feed exactly the files you want via json file but we're not doing that because it is complicated and we don't have a lot of files in this project and that is why we used the forward slash asterisks (/*).
+
+A good/correct workflow would just validate only the files you want to validate.
+
+# Provisioners
+
+Provisioners allow you to execute commands on compute instances eg. a AWS CLI command.
+
+They are not recommended for use by Hashicorp because Configuration Management tools such as Ansible are a better fit, but the functionality exists.
+
+[Provisioners](https://developer.hashicorp.com/terraform/language/resources/provisioners/syntax)
+
+:warning: :warning:
+
+Provisioners like local exec and remote exec are discouraged from being used because there are other tools that can do the job like anisible but in practice a lot of companies are probably still using it.
+
+### Local Exec 
+>**Local exec**
+Local exec runs on the local machine that is doing the terraform commands and so if we move it to terraform cloud , the local machine will where ever terraform cloud's compute is. 
+
+eg 
+```tf
+resource "aws_instance" "web" {
+  # ...
+  provisioner "local-exec" {
+    command = "echo The server's IP address is ${self.private_ip}"
+  }
+}
+```
+
+### Remote Exec
+>**Remote exec** allows you to point to some external compute and you can give it the ability to log in via SSH with additional configurations and execute it that way. It will execute commands on a machine which you target.
+
+eg 
+
+```tf
+resource "aws_instance" "web" {
+  # ...
+  # Establishes connection to be used by all
+  # generic remote provisioners (i.e. file/remote-exec)
+  connection {
+    type     = "ssh"
+    user     = "root"
+    password = var.root_password
+    host     = self.public_ip
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "puppet apply",
+      "consul join ${aws_instance.web.private_ip}",
+    ]
+  }
+}
+
+https://developer.hashicorp.com/terraform/language/resources/provisioners/remote-exec
+```
+
+The reason it is not recommended is that terraform is not a configuration management tool, we just save our statefile there.
+
+I also the cloudfront url as outputs in the outputs.tf files in the module and top level.
+
+I then ran the tf apply command and when there was a change to the content version terraform was able to invalidate the cloudfront cache and serve my new content immediately.
