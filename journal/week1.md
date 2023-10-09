@@ -51,6 +51,11 @@ This week started out with the usual live stream that starts up our week.
 - [Setup Content Version](#setup-content-version)
     + [Ignore file Changes with Terrafrom Lifecycle](#ignore-file-changes-with-terraform-lifecycle)
     + [Terraform Data](#terraform-data)
+- [Invalidate Cache in the Cloudfront Distribution via Terraform](#invalidate-cache-in-the-cloudfront-distribution-via-terraform)
+- [Provisioners](#provisioners)
+    + [Local Exec](#local-exec)
+    + [Remote Exec](#remote-exec)
+
 
 # Static Web Page
 
@@ -916,6 +921,7 @@ They are not recommended for use by Hashicorp because Configuration Management t
 
 Provisioners like local exec and remote exec are discouraged from being used because there are other tools that can do the job like anisible but in practice a lot of companies are probably still using it.
 
+### Local Exec 
 >**Local exec**
 Local exec runs on the local machine that is doing the terraform commands and so if we move it to terraform cloud , the local machine will where ever terraform cloud's compute is. 
 
@@ -929,6 +935,7 @@ resource "aws_instance" "web" {
 }
 ```
 
+### Remote Exec
 >**Remote exec** allows you to point to some external compute and you can give it the ability to log in via SSH with additional configurations and execute it that way. It will execute commands on a machine which you target.
 
 eg 
@@ -957,4 +964,6 @@ https://developer.hashicorp.com/terraform/language/resources/provisioners/remote
 
 The reason it is not recommended is that terraform is not a configuration management tool, we just save our statefile there.
 
+I also the cloudfront url as outputs in the outputs.tf files in the module and top level.
 
+I then ran the tf apply command and when there was a change to the content version terraform was able to invalidate the cloudfront cache and serve my new content immediately.
