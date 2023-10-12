@@ -17,7 +17,7 @@ npm install --global http-server
 cd "$PROJECT_ROOT"
 cd "terratowns_mock_server"
 bundle install
-bundle exec ruby server.rb
+#bundle exec ruby server.rb
       
       
       
