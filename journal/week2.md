@@ -55,3 +55,64 @@ chmod u+x bin/terratown/*
 
 This command simply says, apply this permission to all the files in this directory.
 
+### Running the web server
+
+We can run the web server by executing the following commands:
+
+```rb
+bundle install
+bundle exec ruby server.rb
+```
+
+All of the code for our server is stored in the `server.rb` file.
+
+# Sinatra
+
+The application we are using for our mock server is Sinatra. 
+
+Sinatra is a micro web application or web framework written in Ruby for building out web apps. We are using it because it is lightweight and it is easy to mock it.
+
+If we need to modify anything it will be pretty simple.
+
+Its great for mock or development servers or for very simple projects.
+
+You can create a web-server in a single file.
+
+https://sinatrarb.com/
+
+## Working with Ruby
+
+As earlier mentioned, our web server sinatra is written in ruby. 
+
+In Ruby it is not compulsory to add () at the end of functions when calling them.
+
+### Bundler
+
+Bundler is a package manager for runy.
+It is the primary way to install ruby packages (known as gems) for ruby.
+
+#### Install Gems
+
+You created a Gemfile where we defined our gems.
+
+```rb
+source "https://rubygems.org"
+
+gem 'sinatra'
+gem 'rake'
+gem 'pry'
+gem 'puma'
+gem 'activerecord'
+```
+
+Then you need to run the `bundle install` command
+
+This will install the gems on the system globally (unlike nodejs which install packages in place in a folder called node_modules)
+
+A Gemfile.lock will be created to lock down the gem versions used in this project.
+
+# Mock Server code explanation 
+
+We will mock having a state or database for this development server by setting a global variable. You would never use a global variable in production server.
+
+
