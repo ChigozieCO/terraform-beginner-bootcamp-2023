@@ -1,1 +1,118 @@
 # Launching and Connecting our Terra house to TerraTowns
+
+We started out this week by creating a mock server for Terratowns, we needed a mock server to use in rapidly testing out our APIs as we create our custom provider.
+
+# TerraTowns Mock Server
+
+The code for our custom provider i located in the [Terratowns mock server repo](https://github.com/ExamProCo/terratowns_mock_server) and tghe first thing we need to do is to download the repo so we can easily work with the code.
+
+To do this we run the below command:
+
+```sh
+git clone https://github.com/ExamProCo/terratowns_mock_server.git
+```
+
+The next thing we need to do is to delete the `.git` directory in the just downloaded repo.
+
+```sh
+cd terratowns_mock_server
+rm -rf .git
+```
+
+I then added the necessary configuration to my `gitypod.yml` and my `postCreateCommand.sh` files.
+
+In the `gitpod.yml` file
+```yml
+  - name: sinatra
+    before: | 
+      cd $PROJECT_ROOT
+      cd terratowns_mock_server
+      bundle install
+      bundle exec ruby server.rb 
+```
+
+In the `postCreateCommand` file
+
+```sh
+# Navigate to the project root, Navigate to the Sinatra application directory Install dependencies & start the Sinatra server
+cd "$PROJECT_ROOT"
+cd "terratowns_mock_server"
+bundle install
+bundle exec ruby server.rb
+```
+
+The `bundle install` command will install ruby packages and the `bundle exec ruby server` command will start up the ruby server for us.
+
+I renamed the bin directory in the `terratowns_mock_server` directory to `terratowns` and moved this folder into the `bin` directory in the top level.
+
+I did this because that directory contains all scripts we would use to build our terratowns mock server.
+
+I then made all the scripts in that directory executable, instead of doing it one at a time for all the scripts in the directory I used one command that applied to all the scripts at once:
+
+```sh
+chmod u+x bin/terratown/*
+```
+
+This command simply says, apply this permission to all the files in this directory.
+
+### Running the web server
+
+We can run the web server by executing the following commands:
+
+```rb
+bundle install
+bundle exec ruby server.rb
+```
+
+All of the code for our server is stored in the `server.rb` file.
+
+# Sinatra
+
+The application we are using for our mock server is Sinatra. 
+
+Sinatra is a micro web application or web framework written in Ruby for building out web apps. We are using it because it is lightweight and it is easy to mock it.
+
+If we need to modify anything it will be pretty simple.
+
+Its great for mock or development servers or for very simple projects.
+
+You can create a web-server in a single file.
+
+https://sinatrarb.com/
+
+## Working with Ruby
+
+As earlier mentioned, our web server sinatra is written in ruby. 
+
+In Ruby it is not compulsory to add () at the end of functions when calling them.
+
+### Bundler
+
+Bundler is a package manager for runy.
+It is the primary way to install ruby packages (known as gems) for ruby.
+
+#### Install Gems
+
+You created a Gemfile where we defined our gems.
+
+```rb
+source "https://rubygems.org"
+
+gem 'sinatra'
+gem 'rake'
+gem 'pry'
+gem 'puma'
+gem 'activerecord'
+```
+
+Then you need to run the `bundle install` command
+
+This will install the gems on the system globally (unlike nodejs which install packages in place in a folder called node_modules)
+
+A Gemfile.lock will be created to lock down the gem versions used in this project.
+
+# Mock Server code explanation 
+
+We will mock having a state or database for this development server by setting a global variable. You would never use a global variable in production server.
+
+

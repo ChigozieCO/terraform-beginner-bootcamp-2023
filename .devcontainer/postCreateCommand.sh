@@ -13,8 +13,11 @@ source ./bin/set_tf_alias_codespace
 # Install Http Live Server
 npm install --global http-server
 
-
-      
+# Navigate to the project root, Navigate to the Sinatra application directory Install dependencies & start the Sinatra server
+cd "$PROJECT_ROOT"
+cd "terratowns_mock_server"
+bundle install
+#bundle exec ruby server.rb
       
       
       
