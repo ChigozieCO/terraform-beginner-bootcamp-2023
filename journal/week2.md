@@ -149,7 +149,7 @@ We run it with the below command:
 go run main.go
 ```
 
-<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 1 >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+![Run golang](https://github.com/ChigozieCO/terraform-beginner-bootcamp-2023/assets/107365067/add22496-54a9-4c26-9502-d25ebc1d07a5)
 
 >Golang doesn't have classes, they have things called interfaces.
 
