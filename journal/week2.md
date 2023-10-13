@@ -116,3 +116,45 @@ A Gemfile.lock will be created to lock down the gem versions used in this projec
 We will mock having a state or database for this development server by setting a global variable. You would never use a global variable in production server.
 
 
+# Terratowns Provider
+
+Now that we have our mock server worki ng as we need it to, it is time to bui,d our terraform provider.
+
+This provider will be written in golang.
+
+I started by inputting the below code, to test our golang
+
+```golang
+package main
+
+import "fmt"
+
+func main() {
+	// Format.PrintLine
+	fmt.Println("Hello, world!")
+}
+```
+
+>Package main: Declares the package name. The main package is special in Go, it's where the execution of the program starts.
+
+>fmt is short format, it contains functions for formatted I/O.
+
+>func main(): Defines the main function, the entry point of the app. When you run the program, it starts executing from this function.
+
+Unlike Ruby, go file are complied as binaries. They are not dynamically ran, you don't run the scripts you compile it into a binary and you run the binary.
+
+We run it with the below command:
+
+```golang
+go run main.go
+```
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<< image 1 >>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+>Golang doesn't have classes, they have things called interfaces.
+
+Command to build the terraform provider
+
+```sh
+go build -o terraform-provider-terratowns_V1.0.0
+```
