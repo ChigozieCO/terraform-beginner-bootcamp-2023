@@ -20,8 +20,13 @@
 				"editor.fontSize": 14,
 				"workbench.colorTheme": "Default Dark Modern"
 			}
-		}
-		
+		},
+  "service": {
+    "image": "hashicorp/terraform",
+    "env": {
+        "TF_LOG": "DEBUG"
+    }
+  }
 	},
 	"postCreateCommand": "bash .devcontainer/postCreateCommand.sh"
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
