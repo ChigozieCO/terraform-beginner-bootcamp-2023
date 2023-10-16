@@ -34,3 +34,4 @@ override.tf.json
 terraform.rc
 
 terraform-provider-terratowns/terraform-provider-terratowns_V*
+terraform-provider-terratowns/terraform-provider-terratowns_v*

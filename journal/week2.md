@@ -208,3 +208,103 @@ provider "terratowns" {
 ```
 
 I then went ahead to run `tf init` and `tf plan` commands to verify that m configuration works.
+
+# Define `configureContext`
+
+Before we started adding resources we added our `configureContext` with the below code:
+
+```tf
+
+...
+
+// In the import code block we added 
+
+  "context"
+  "github.com/google/uuid"
+  "github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+
+...
+
+type Config struct {
+  Endpoint string
+  Token string
+  UserUuid string
+}
+
+...
+
+func providerConfigure(p *schema.Provider) schema.ConfigureContextFunc {
+	return func(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics ) {
+		log.Print("providerConfigure:start")
+		config := Config{
+			Endpoint: d.Get("endpoint").(string),
+			Token: d.Get("token").(string),
+			UserUuid: d.Get("user_uuid").(string),
+		}
+		log.Print("providerConfigure:end")
+		return &config, nil
+	}
+}
+```
+
+The latter part of the above code helps us populate the `config` so that we can use it in other places.
+
+# Setup a Resource
+
+To begin to setup resources, the first thing I did was add the below line of code in the `provider` function inside the `ResourceMap`
+
+```tf
+      "terratowns_home": Resource(),
+```
+
+The next thing was to define the `Resource` function.
+
+```tf
+func Resource() *schema.Resource {
+  log.Print("Resource:start")
+  resource := &schema.Resource {
+    CreateContext: resourceHouseCreate,
+    ReadContext: resourceHouseRead,
+    UpdateContext: resourceHouseUpdate,
+    DeleteContext: resourceHouseDelete,
+  }
+  log.Print("Resource:end")
+  return resource
+}
+```
+
+We defined 4 functions in the code above, simply known as `CRUD` in programming.
+
+```
+CRUD
+
+Terraform Provider resources utilize CRUD.
+
+CRUD stands for Create, Read Update, and Delete
+
+https://en.wikipedia.org/wiki/Create,_read,_update_and_delete
+```
+
+Now we need to have those functions and so we define them, next.
+
+```tf
+func resourceHouseCreate(ctx context.Context, d *schema.ResourceData, m interface{})diag.Diagnostics {
+  var diags diag.Diagnostics
+  return diags
+}
+
+func resourceHouseRead(ctx context.Context, d *schema.ResourceData, m interface{})diag.Diagnostics {
+  var diags diag.Diagnostics
+  return diags
+}
+
+func resourceHouseUpdate(ctx context.Context, d *schema.ResourceData, m interface{})diag.Diagnostics {
+  var diags diag.Diagnostics
+  return diags
+}
+
+func resourceHouseDelete(ctx context.Context, d *schema.ResourceData, m interface{})diag.Diagnostics {
+  var diags diag.Diagnostics
+  return diags
+}
+```
