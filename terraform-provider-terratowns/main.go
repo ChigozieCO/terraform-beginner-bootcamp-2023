@@ -5,7 +5,6 @@ package main
 // fmt is short format, it contains functions for formatted I/O.
 import (
 	"log"
-	"log"
 	"fmt"
 	"bytes"
   "context"
@@ -35,18 +34,11 @@ type Config struct {
   UserUuid string
 }
 
-type Config struct {
-  Endpoint string
-  Token string
-  UserUuid string
-}
-
 // in golang, a titlecase function will get exported.
 func Provider() *schema.Provider{
 	var p* schema.Provider
 	p = &schema.Provider{
 		ResourcesMap:  map[string]*schema.Resource{
-      "terratowns_home": Resource(),
       "terratowns_home": Resource(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
@@ -69,11 +61,9 @@ func Provider() *schema.Provider{
 				Required: true,
 				Description: "UUID for configuration",
 				ValidateFunc: validateUUID,
-				ValidateFunc: validateUUID,
 			},
 		},
 	}
-	p.ConfigureContextFunc = providerConfigure(p)
 	p.ConfigureContextFunc = providerConfigure(p)
 	return p
 }
