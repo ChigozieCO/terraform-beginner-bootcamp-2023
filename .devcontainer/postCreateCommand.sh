@@ -5,6 +5,7 @@ source ./bin/install_terraform_cli_codespace
 source ./bin/generate_tfrc_credentials_codespace
 source ./bin/set_tf_alias_codespace
 cp $PROJECT_ROOT/terraform.tfvars.example $PROJECT_ROOT/terraform.tfvars
+source ./bin/build_provider_codespace
 
 # Install AWS ClI
 source ./bin/install_aws_cli_codespace
