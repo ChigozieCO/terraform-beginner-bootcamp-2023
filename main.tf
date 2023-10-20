@@ -44,7 +44,7 @@ Hope to see you at one of these places in the nearest future.
   DESCRIPTION
   domain_name = module.home_beaches_hosting.domain_name
   #domain_name = "geoijol.cloudfront.net"
-  town ="missingo"
+  town ="the-nomad-pad"
   content_version = var.beaches.content_version
 }
 
