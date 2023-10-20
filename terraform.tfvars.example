@@ -3,7 +3,8 @@ beaches = {
   public_path = "/workspace/terraform-beginner-bootcamp-2023/public/beaches"
   content_version=1
 }
-# gadgets = {
-#   public_path = "/workspace/terraform-beginner-bootcamp-2023/public/gadgets"
-#   content_version=1
-# }
+
+gadgets = {
+  public_path = "/workspace/terraform-beginner-bootcamp-2023/public/gadgets"
+  content_version=1
+}
